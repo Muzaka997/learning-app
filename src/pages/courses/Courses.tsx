@@ -1,13 +1,14 @@
 import React from "react";
 import CourseCard from "./CourseCard";
 import type { Course } from "./CourseCard";
+import reactImage from "../../assets/react.svg";
 
 const courses: Course[] = [
   {
     id: "c1",
     title: "React for Beginners",
     description: "Learn the basics of React and build dynamic interfaces.",
-    image: "https://via.placeholder.com/300x200",
+    image: reactImage,
   },
   {
     id: "c2",
