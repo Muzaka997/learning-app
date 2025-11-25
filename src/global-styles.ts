@@ -8,6 +8,9 @@ export const GlobalStyles = createGlobalStyle`
     line-height: 1.5;
     font-weight: 400;
 
+    max-width: 40vw;
+    margin-right: auto;
+
     color-scheme: light dark;
     color: rgba(255, 255, 255, 0.87);
     background-color: #242424;
@@ -21,6 +24,7 @@ export const GlobalStyles = createGlobalStyle`
     background-color: ${(p) => p.theme.background};
     transition: background-color 0.3s, color 0.3s;
 
+    padding-left: 230px;
   }
 
   a {
@@ -34,12 +38,13 @@ export const GlobalStyles = createGlobalStyle`
   }
 
   body {
-    margin: 0;
-    display: flex;
-    place-items: center;
-    min-width: 320px;
-    min-height: 100vh;
-  }
+  margin: 0;
+  
+  padding: 20px;
+}
+
+
+
 
   h1 {
     font-size: 3.2em;
@@ -85,11 +90,11 @@ export const NavBarWrapper = styled.nav`
   display: flex;
   flex-direction: column;
   align-items: stretch;
-  gap: 2rem;
+  gap: 0.1rem;
   padding: 0;
-
-  background: ${(p) => p.theme.sidebarBackground || "#111"};
-  color: ${(p) => p.theme.sidebarText || "white"};
+  color: ${(p) => p.theme.text};
+  background-color: ${(p) => p.theme.background};
+  border: 2px solid #444;
 
   position: fixed;
   top: 0;
@@ -109,8 +114,9 @@ export const NavItem = styled(Link)`
   display: block;
   width: 100%;
   text-align: left;
+  border: 1px solid #444;
 
-  padding: 15px 5px;
+  padding: 15px 3px;
   font-size: 1.2rem;
   font-weight: 500;
 

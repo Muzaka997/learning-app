@@ -5,7 +5,7 @@ import type { ThemeType } from "./Theme.styles";
 import type { ReactNode } from "react";
 
 interface ThemeContextType {
-  darkMode: boolean;
+  darkmode: boolean;
   toggleTheme: () => void;
 }
 
@@ -17,14 +17,14 @@ interface Props {
 }
 
 export const CustomThemeProvider: React.FC<Props> = ({ children }) => {
-  const [darkMode, setDarkMode] = useState(false);
+  const [darkmode, setDarkmode] = useState(false);
 
-  const toggleTheme = () => setDarkMode((prev) => !prev);
+  const toggleTheme = () => setDarkmode((prev) => !prev);
 
   return (
-    <ThemeContext.Provider value={{ darkMode, toggleTheme }}>
+    <ThemeContext.Provider value={{ darkmode, toggleTheme }}>
       <ThemeProvider
-        theme={darkMode ? (darkTheme as ThemeType) : (lightTheme as ThemeType)}
+        theme={darkmode ? (darkTheme as ThemeType) : (lightTheme as ThemeType)}
       >
         {children}
       </ThemeProvider>

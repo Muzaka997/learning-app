@@ -17,9 +17,7 @@ const AssessmentCard: React.FC<Props> = ({ assessment }) => {
     <div className="assessment-card">
       <h3>{assessment.title}</h3>
       <p>{assessment.description}</p>
-      <span className={`difficulty ${assessment.difficulty.toLowerCase()}`}>
-        {assessment.difficulty}
-      </span>
+      <span>{assessment.difficulty}</span>
 
       <button>Start Assessment</button>
     </div>
