@@ -7,7 +7,7 @@ import Assessments from "./pages/assessments/Assessments";
 import EBooks from "./pages/e-books/Ebooks";
 import ContactUs from "./pages/contact/ContactUs";
 import { CustomThemeProvider } from "./theme/ThemeContext";
-import { GlobalStyles } from "./global-styles";
+import { ContentWrapper, GlobalStyles } from "./global-styles";
 import ThemeButton from "./components/ThemeButton";
 
 export default function App() {
@@ -17,13 +17,15 @@ export default function App() {
       <ThemeButton />
       <BrowserRouter>
         <NavBar />
-        <Routes>
-          <Route path="/" element={<MainPage />} />
-          <Route path="/courses" element={<CoursesPage />} />
-          <Route path="/assessments" element={<Assessments />} />
-          <Route path="/e-books" element={<EBooks />} />
-          <Route path="/contactus" element={<ContactUs />} />
-        </Routes>
+        <ContentWrapper>
+          <Routes>
+            <Route path="/" element={<MainPage />} />
+            <Route path="/courses" element={<CoursesPage />} />
+            <Route path="/assessments" element={<Assessments />} />
+            <Route path="/e-books" element={<EBooks />} />
+            <Route path="/contactus" element={<ContactUs />} />
+          </Routes>
+        </ContentWrapper>
       </BrowserRouter>
     </CustomThemeProvider>
   );

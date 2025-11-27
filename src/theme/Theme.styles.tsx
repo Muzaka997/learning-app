@@ -9,6 +9,7 @@ export const lightTheme = {
   sidebarBackground: "#f5f5f5",
   sidebarText: "#111",
   sidebarHover: "#ddd",
+  sidebarActive: "#ccc",
 };
 
 export const darkTheme = {
@@ -22,6 +23,7 @@ export const darkTheme = {
   sidebarBackground: "#111",
   sidebarText: "#fff",
   sidebarHover: "#333",
+  sidebarActive: "#555",
 };
 
 export type ThemeType = typeof lightTheme;

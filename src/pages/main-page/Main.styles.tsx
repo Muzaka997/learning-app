@@ -1,21 +1,25 @@
 import styled from "styled-components";
 
-export const AppWrapper = styled.div<{ darkMode: boolean }>`
-  background: ${(p) => (p.darkMode ? "#000" : "#fff")};
-  color: ${(p) => (p.darkMode ? "#eee" : "#222")};
+export const AppWrapper = styled.div.withConfig({
+  shouldForwardProp: (prop) => prop !== "darkmode",
+})<{ darkmode?: boolean }>`
+  background: ${(p) => (p.darkmode ? "#000" : "#fff")};
+  color: ${(p) => (p.darkmode ? "#eee" : "#222")};
   font-family: system-ui, sans-serif;
   min-height: 100vh;
 `;
 
-export const Header = styled.header<{ darkMode: boolean }>`
-  background: ${(p) => (p.darkMode ? "#111" : "#fff")};
-  color: ${(p) => (p.darkMode ? "#fff" : "#111")};
+export const Header = styled.header.withConfig({
+  shouldForwardProp: (prop) => prop !== "darkmode",
+})<{ darkmode?: boolean }>`
+  background: ${(p) => (p.darkmode ? "#111" : "#fff")};
+  color: ${(p) => (p.darkmode ? "#fff" : "#111")};
   padding: 1rem 2rem;
   display: flex;
   justify-content: center;
   align-items: center;
   gap: 2rem;
-  border-bottom: 1px solid ${(p) => (p.darkMode ? "#333" : "#eee")};
+  border-bottom: 1px solid ${(p) => (p.darkmode ? "#333" : "#eee")};
 `;
 
 export const Logo = styled.h1`
@@ -28,22 +32,25 @@ export const Nav = styled.nav`
   gap: 1.5rem;
 `;
 
-export const NavLink = styled.a<{ darkMode: boolean }>`
-  color: ${(p) => (p.darkMode ? "#fff" : "black")};
+export const NavLink = styled.a.withConfig({
+  shouldForwardProp: (prop) => prop !== "darkmode", // prevent darkmode from reaching <a>
+})<{ darkmode?: boolean }>`
+  color: ${(p) => (p.darkmode ? "#fff" : "#333")};
   text-decoration: none;
-  font-weight: 500;
-  transition: 0.2s;
+  padding: 0.5rem 1rem;
 
   &:hover {
-    color: ${(p) => (p.darkMode ? "#fff" : "#000")};
+    color: ${(p) => (p.darkmode ? "#ddd" : "#000")};
   }
 `;
 
-export const Hero = styled.section<{ darkMode: boolean }>`
+export const Hero = styled.section.withConfig({
+  shouldForwardProp: (prop) => prop !== "darkmode",
+})<{ darkmode?: boolean }>`
   text-align: center;
   padding: 4rem 1rem;
-  background: ${(p) => (p.darkMode ? "#111" : "#f7f7f7")};
-  color: ${(p) => (p.darkMode ? "#eee" : "#222")};
+  background: ${(p) => (p.darkmode ? "#111" : "#f7f7f7")};
+  color: ${(p) => (p.darkmode ? "#eee" : "#222")};
 
   h2 {
     font-size: 2.5rem;
@@ -51,25 +58,29 @@ export const Hero = styled.section<{ darkMode: boolean }>`
   }
 `;
 
-export const CTAButton = styled.button<{ darkMode: boolean }>`
+export const CTAButton = styled.button.withConfig({
+  shouldForwardProp: (prop) => prop !== "darkmode",
+})<{ darkmode?: boolean }>`
   margin-top: 1.5rem;
   padding: 0.8rem 1.6rem;
   font-size: 1rem;
   border-radius: 8px;
   border: none;
   cursor: pointer;
-  background: ${(p) => (p.darkMode ? "#444" : "#333")};
+  background: ${(p) => (p.darkmode ? "#444" : "#333")};
   color: white;
   transition: 0.2s;
 
   &:hover {
-    background: ${(p) => (p.darkMode ? "#222" : "#000")};
+    background: ${(p) => (p.darkmode ? "#222" : "#000")};
   }
 `;
 
-export const Features = styled.section<{ darkMode: boolean }>`
-  background: ${(p) => (p.darkMode ? "#222" : "#333")};
-  color: ${(p) => (p.darkMode ? "#ddd" : "white")};
+export const Features = styled.section.withConfig({
+  shouldForwardProp: (prop) => prop !== "darkmode",
+})<{ darkmode?: boolean }>`
+  background: ${(p) => (p.darkmode ? "#222" : "#333")};
+  color: ${(p) => (p.darkmode ? "#ddd" : "white")};
   padding: 3rem 2rem;
   max-width: 800px;
   margin: 2rem auto;
@@ -87,11 +98,13 @@ export const Features = styled.section<{ darkMode: boolean }>`
   }
 `;
 
-export const Footer = styled.footer<{ darkMode: boolean }>`
+export const Footer = styled.footer.withConfig({
+  shouldForwardProp: (prop) => prop !== "darkmode",
+})<{ darkmode?: boolean }>`
   text-align: center;
   padding: 2rem;
   margin-top: 3rem;
-  border-top: 1px solid ${(p) => (p.darkMode ? "#333" : "#eee")};
+  border-top: 1px solid ${(p) => (p.darkmode ? "#333" : "#eee")};
   font-size: 0.9rem;
-  color: ${(p) => (p.darkMode ? "#aaa" : "#666")};
+  color: ${(p) => (p.darkmode ? "#aaa" : "#666")};
 `;
