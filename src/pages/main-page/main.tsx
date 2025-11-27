@@ -12,32 +12,32 @@ import {
 } from "./Main.styles";
 
 function MainPage() {
-  const { darkMode } = useThemeContext();
+  const { darkmode } = useThemeContext();
 
   return (
-    <AppWrapper darkMode={darkMode}>
-      <Header darkMode={darkMode}>
+    <AppWrapper darkmode={darkmode}>
+      <Header darkmode={darkmode}>
         <Logo>MyApp</Logo>
         <Nav>
-          <NavLink darkMode={darkMode} href="#">
+          <NavLink darkmode={darkmode} href="#">
             Home
           </NavLink>
-          <NavLink darkMode={darkMode} href="#">
+          <NavLink darkmode={darkmode} href="#">
             Features
           </NavLink>
-          <NavLink darkMode={darkMode} href="#">
+          <NavLink darkmode={darkmode} href="#">
             Contact
           </NavLink>
         </Nav>
       </Header>
 
-      <Hero darkMode={darkMode}>
+      <Hero darkmode={darkmode}>
         <h2>Welcome to MyApp</h2>
         <p>A modern React + TypeScript application template.</p>
-        <CTAButton darkMode={darkMode}>Get Started</CTAButton>
+        <CTAButton darkmode={darkmode}>Get Started</CTAButton>
       </Hero>
 
-      <Features darkMode={darkMode}>
+      <Features darkmode={darkmode}>
         <h3>Features</h3>
         <ul>
           <li>⚡ Fast & lightweight</li>
@@ -47,7 +47,7 @@ function MainPage() {
         </ul>
       </Features>
 
-      <Footer darkMode={darkMode}>
+      <Footer darkmode={darkmode}>
         <p>© {new Date().getFullYear()} MyApp — All rights reserved.</p>
       </Footer>
     </AppWrapper>

@@ -2,6 +2,8 @@ import React from "react";
 import CourseCard from "./CourseCard";
 import type { Course } from "./CourseCard";
 import reactImage from "../../assets/react.svg";
+import typescriptImage from "../../assets/typescript.jpg";
+import javascriptImage from "../../assets/javascript.png";
 
 const courses: Course[] = [
   {
@@ -14,13 +16,13 @@ const courses: Course[] = [
     id: "c2",
     title: "TypeScript Essentials",
     description: "Master TypeScript and write safer, cleaner code.",
-    image: "https://via.placeholder.com/300x200",
+    image: typescriptImage,
   },
   {
     id: "c3",
     title: "Advanced JavaScript",
     description: "Deep dive into JS concepts, patterns, and performance.",
-    image: "https://via.placeholder.com/300x200",
+    image: javascriptImage,
   },
 ];
 
