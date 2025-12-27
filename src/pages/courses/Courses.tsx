@@ -1,32 +1,33 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import CourseCard from "./CourseCard";
 import type { Course } from "./CourseCard";
-import reactImage from "../../assets/react.svg";
-import typescriptImage from "../../assets/typescript.jpg";
-import javascriptImage from "../../assets/javascript.png";
 
-const courses: Course[] = [
-  {
-    id: "c1",
-    title: "React for Beginners",
-    description: "Learn the basics of React and build dynamic interfaces.",
-    image: reactImage,
-  },
-  {
-    id: "c2",
-    title: "TypeScript Essentials",
-    description: "Master TypeScript and write safer, cleaner code.",
-    image: typescriptImage,
-  },
-  {
-    id: "c3",
-    title: "Advanced JavaScript",
-    description: "Deep dive into JS concepts, patterns, and performance.",
-    image: javascriptImage,
-  },
-];
+import axios from "axios";
 
 const CoursesPage: React.FC = () => {
+  const [courses, setCourses] = useState<Course[]>([]);
+
+  useEffect(() => {
+    const fetchCourses = async () => {
+      const response = await axios.get("http://localhost:5001/api/v1/courses");
+
+      const backendCourses = response.data.data;
+
+      // 🔁 Map backend data → frontend Course interface
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const mappedCourses: Course[] = backendCourses.map((course: any) => ({
+        id: course._id,
+        title: course.title,
+        description: course.description,
+        image: course.image,
+      }));
+
+      setCourses(mappedCourses);
+    };
+
+    fetchCourses();
+  }, []);
+
   return (
     <main>
       <h1>Our Courses</h1>
