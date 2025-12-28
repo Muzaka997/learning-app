@@ -2,13 +2,14 @@ import "./App.css";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import MainPage from "./pages/main-page/main";
 import CoursesPage from "./pages/courses/Courses";
-import NavBar from "./navigation/nav-bar";
+// import NavBar from "./navigation/nav-bar";
 import Assessments from "./pages/assessments/Assessments";
 import EBooks from "./pages/e-books/Ebooks";
 import ContactUs from "./pages/contact/ContactUs";
 import { CustomThemeProvider } from "./theme/ThemeContext";
-import { ContentWrapper, GlobalStyles } from "./global-styles";
+import { GlobalStyles } from "./global-styles";
 import ThemeButton from "./components/ThemeButton";
+import Layout from "./components/Layout/Layout";
 
 export default function App() {
   return (
@@ -16,16 +17,16 @@ export default function App() {
       <GlobalStyles />
       <ThemeButton />
       <BrowserRouter>
-        <NavBar />
-        <ContentWrapper>
-          <Routes>
-            <Route path="/" element={<MainPage />} />
-            <Route path="/courses" element={<CoursesPage />} />
-            <Route path="/assessments" element={<Assessments />} />
-            <Route path="/e-books" element={<EBooks />} />
-            <Route path="/contactus" element={<ContactUs />} />
-          </Routes>
-        </ContentWrapper>
+        {/* <NavBar /> */}
+        <Routes>
+          <Route path="/" element={<Layout />}>
+            <Route index element={<MainPage />} />
+            <Route path="courses" element={<CoursesPage />} />
+            <Route path="assessments" element={<Assessments />} />
+            <Route path="e-books" element={<EBooks />} />
+            <Route path="contactus" element={<ContactUs />} />
+          </Route>
+        </Routes>
       </BrowserRouter>
     </CustomThemeProvider>
   );
