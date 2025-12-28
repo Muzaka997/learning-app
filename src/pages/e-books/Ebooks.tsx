@@ -1,6 +1,14 @@
+import TextField from "@mui/material/TextField";
+import Button from "@mui/material/Button";
+
 import React, { useState, useRef, useEffect } from "react";
-import { EBooksContainer } from "./Ebooks.styled";
+import {
+  EBooksContainer,
+  StyledBooksContainer,
+  StyledSearchContainer,
+} from "./Ebooks.styled";
 import axios from "axios";
+import BookCard from "./components/Ebook/BookCard";
 
 type Book = {
   id: string;
@@ -59,37 +67,36 @@ const EBooks: React.FC = () => {
         /* ================= LIBRARY VIEW ================= */
         <>
           <h1>E-Books Collection</h1>
+          <StyledSearchContainer>
+            <TextField
+              inputRef={inputRef}
+              label="Search e-books"
+              variant="outlined"
+              size="small"
+              onKeyDown={(e) => {
+                if (e.key === "Enter") handleSubmit();
+              }}
+              sx={{ marginRight: 2 }}
+            />
 
-          <input
-            ref={inputRef}
-            type="text"
-            placeholder="Search e-books..."
-            onKeyDown={(e) => {
-              if (e.key === "Enter") handleSubmit();
-            }}
-          />
-          <button type="button" onClick={handleSubmit}>
-            Search
-          </button>
+            <Button variant="contained" onClick={handleSubmit}>
+              Search
+            </Button>
+          </StyledSearchContainer>
 
           {submitted && filteredBooks.length === 0 && (
             <p style={{ color: "red" }}>No results found.</p>
           )}
 
-          <ul>
+          <StyledBooksContainer>
             {filteredBooks.map((book) => (
-              <li key={book.id}>
-                <strong>{book.title}</strong> by {book.author}
-                <img
-                  src={`http://localhost:5001/uploads/${book.image}`}
-                  alt={`${book.title} image`}
-                />
-                {book.pdf && (
-                  <button onClick={() => setActivePdf(book.pdf!)}>Read</button>
-                )}
-              </li>
+              <BookCard
+                book={book}
+                key={book.id}
+                onRead={(pdf) => setActivePdf(pdf)}
+              />
             ))}
-          </ul>
+          </StyledBooksContainer>
         </>
       ) : (
         /* ================= PDF VIEW ================= */

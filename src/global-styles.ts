@@ -3,6 +3,63 @@ import styled from "styled-components";
 import { Link } from "react-router-dom";
 
 export const GlobalStyles = createGlobalStyle`
+    *,
+    *::before,
+    *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html {
+      overflow-x: hidden;
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-size: 14px;
+      line-height: 24px;
+      font-family: 'Open Sans', sans-serif;
+      -webkit-text-size-adjust: 100%;
+      -moz-text-size-adjust: 100%;
+      -ms-text-size-adjust: 100%;
+      text-size-adjust: 100%;
+    }
+    ul,
+    li,
+    p,
+    img,
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6,
+    input,
+    button,
+    nav,
+    a {
+      padding: 0;
+      margin: 0;
+      list-style: none;
+      font-weight: normal;
+      text-decoration: none;
+    }
+    input,
+    textarea {
+      outline: none;
+      box-shadow: none;
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      appearance: none;
+    }
+    button {
+      border: none;
+      background: none;
+      cursor: pointer;
+      outline: none;
+    }
+
   :root {
     --sidebar-width: 240px;
 
@@ -15,6 +72,7 @@ export const GlobalStyles = createGlobalStyle`
     font-weight: 400;
     text-rendering: optimizeLegibility;
     -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
   }
 
   /* The body now behaves like a normal page */
@@ -27,10 +85,7 @@ export const GlobalStyles = createGlobalStyle`
   }
 
   /* Content container */
-  #root {
-    padding: 20px 30px;
-    max-width: 900px;   /* optional: makes reading nicer */
-  }
+
 
   a {
     color: ${(p) => p.theme.link};
@@ -93,6 +148,9 @@ export const NavItem = styled(Link)`
   padding: 0.9rem 1rem;
   font-size: 1.1rem;
   font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 8px;
 
   color: ${(p) => p.theme.sidebarText || "#eee"};
   text-decoration: none;

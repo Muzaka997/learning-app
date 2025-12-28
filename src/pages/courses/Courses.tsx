@@ -30,8 +30,7 @@ const CoursesPage: React.FC = () => {
 
   return (
     <main>
-      <h1>Our Courses</h1>
-      <p>Choose a course and start learning today. New content added weekly!</p>
+      <h1>My Courses</h1>
 
       <div>
         {courses.map((course) => (
