@@ -1,56 +1,34 @@
-import { useThemeContext } from "../../theme/useThemeContext";
-import {
-  AppWrapper,
-  Header,
-  Logo,
-  Nav,
-  NavLink,
-  Hero,
-  CTAButton,
-  Features,
-  Footer,
-} from "./Main.styles";
+import CoursesPage from "../courses/Courses";
+import EBooks from "../e-books/Ebooks";
+import { StyledAppWrapper, StyledContainer } from "./Main.styles";
 
 function MainPage() {
-  const { darkmode } = useThemeContext();
-
   return (
-    <AppWrapper darkmode={darkmode}>
-      <Header darkmode={darkmode}>
-        <Logo>MyApp</Logo>
-        <Nav>
-          <NavLink darkmode={darkmode} href="#">
-            Home
-          </NavLink>
-          <NavLink darkmode={darkmode} href="#">
-            Features
-          </NavLink>
-          <NavLink darkmode={darkmode} href="#">
-            Contact
-          </NavLink>
-        </Nav>
-      </Header>
+    <StyledAppWrapper>
+      <h1>My Learning App</h1>
+      <StyledContainer>
+        <p>
+          Discover literature step by step in a space designed for thoughtful
+          learning. Explore structured courses that guide you through literary
+          movements, authors, and ideas. Deepen your understanding with
+          carefully selected eBooks that support and expand each topic.{" "}
+        </p>
 
-      <Hero darkmode={darkmode}>
-        <h2>Welcome to MyApp</h2>
-        <p>A modern React + TypeScript application template.</p>
-        <CTAButton darkmode={darkmode}>Get Started</CTAButton>
-      </Hero>
+        <p>
+          As you progress, apply what you've learned through assignments that
+          encourage close reading, critical thinking, and interpretation.
+          Whether you are studying independently or following a guided path, the
+          platform helps you build knowledge gradually and meaningfully.
+        </p>
 
-      <Features darkmode={darkmode}>
-        <h3>Features</h3>
-        <ul>
-          <li>⚡ Fast & lightweight</li>
-          <li>🔒 Type-safe with TypeScript</li>
-          <li>🎨 Clean, modern UI</li>
-          <li>🚀 Ready for real projects</li>
-        </ul>
-      </Features>
-
-      <Footer darkmode={darkmode}>
-        <p>© {new Date().getFullYear()} MyApp — All rights reserved.</p>
-      </Footer>
-    </AppWrapper>
+        <p>
+          Register to unlock full access to courses, readings, and assignments,
+          and to track your learning journey from start to finish.
+        </p>
+      </StyledContainer>
+      <CoursesPage></CoursesPage>
+      <EBooks></EBooks>
+    </StyledAppWrapper>
   );
 }
 

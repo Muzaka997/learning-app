@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
-import CourseCard from "./CourseCard";
-import type { Course } from "./CourseCard";
+import CourseCard from "./components/CourseCard/CourseCard";
+import type { Course } from "./components/CourseCard/CourseCard";
 
 import axios from "axios";
+import { StyledContainer, StyledCoursesContainer } from "./Courses.styled";
 
 const CoursesPage: React.FC = () => {
   const [courses, setCourses] = useState<Course[]>([]);
@@ -16,10 +17,12 @@ const CoursesPage: React.FC = () => {
       // 🔁 Map backend data → frontend Course interface
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const mappedCourses: Course[] = backendCourses.map((course: any) => ({
-        id: course._id,
+        _id: course._id,
         title: course.title,
         description: course.description,
         image: course.image,
+        videos: course.videos || [],
+        homeworks: course.homeworks || [],
       }));
 
       setCourses(mappedCourses);
@@ -29,15 +32,15 @@ const CoursesPage: React.FC = () => {
   }, []);
 
   return (
-    <main>
+    <StyledContainer $darkMode={false}>
       <h1>My Courses</h1>
 
-      <div>
+      <StyledCoursesContainer>
         {courses.map((course) => (
-          <CourseCard key={course.id} course={course} />
+          <CourseCard key={course._id} course={course} />
         ))}
-      </div>
-    </main>
+      </StyledCoursesContainer>
+    </StyledContainer>
   );
 };
 
