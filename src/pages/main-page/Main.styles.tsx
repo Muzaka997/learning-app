@@ -14,6 +14,7 @@ export const StyledAppWrapper = styled.div`
   flex-direction: column;
   gap: 20px;
   height: 200vh;
+  width: 100vh;
   padding: 24px;
   color: ${(p) => p.theme.text};
   background-color: ${(p) => p.theme.background};
@@ -22,7 +23,7 @@ export const StyledAppWrapper = styled.div`
 
 export const StyledContainer = styled.div`
   font-size: 1.2rem;
-  width: 45%;
+  width: 60%;
   display: flex;
   flex-wrap: wrap;
   text-align: justify;
