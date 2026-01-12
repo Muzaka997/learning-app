@@ -1,30 +1,34 @@
 import React from "react";
 import { useAuth } from "../auth/useAuth";
-import {
-  StyledInfo,
-  StyledName,
-  StyledProfileContainer,
-} from "./profile.styled";
+import UploadPhoto from "./components/upload";
 
 const Profile: React.FC = () => {
   const { user } = useAuth();
 
-  if (!user) {
-    return <p>You must be logged in to view this page.</p>;
-  }
+  if (!user) return <p>You must be logged in to view this page.</p>;
 
   return (
-    <StyledProfileContainer $darkMode={false}>
-      <StyledName>Profile</StyledName>
-
-      <StyledInfo>
+    <div>
+      <h2>Profile</h2>
+      <p>
         <strong>Name:</strong> {user.name}
-      </StyledInfo>
-
-      <StyledInfo>
+      </p>
+      <p>
         <strong>Email:</strong> {user.email}
-      </StyledInfo>
-    </StyledProfileContainer>
+      </p>
+
+      <img
+        src={
+          user.profilePhoto
+            ? `http://localhost:5001${user.profilePhoto}`
+            : "/default-avatar.png"
+        }
+        alt="Profile"
+        style={{ width: "200px", borderRadius: "8px" }}
+      />
+
+      <UploadPhoto />
+    </div>
   );
 };
 
