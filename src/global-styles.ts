@@ -81,7 +81,7 @@ export const GlobalStyles = createGlobalStyle`
     padding: 0;
     box-sizing: border-box;
     min-height: 100vh;
-    width: 100%;
+    width: 100vh;
   }
 
   /* Content container */

@@ -8,6 +8,7 @@ export const StyledWrapper = styled.div`
   display: flex;
   gap: 12px;
   padding-left: 250px;
+  /* padding-top: 70px; */
   height: 100vh;
   width: 100vw;
 `;

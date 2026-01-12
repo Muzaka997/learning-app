@@ -8,30 +8,34 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../../auth/useAuth";
 
-export interface Video {
-  _id: string;
-  week: number;
-  title: string;
-  url: string;
+export interface WeekContent {
+  type: "video" | "homework";
+  title?: string;
+  url?: string;
+  description?: string;
 }
 
-export interface Homework {
-  _id: string;
+// Type for each week
+export interface Week {
   week: number;
-  description: string;
+  content: WeekContent[];
 }
 
+// Type for a single course
 export interface Course {
-  _id: string;
+  id: string;
   title: string;
   description: string;
+  weeks: number;
+  tuition: number;
+  minimumSkill: "beginner" | "intermediate" | "advanced";
+  scholarshipAvailable: boolean;
   image: string;
-  videos: Video[];
-  homeworks: Homework[];
+  Weeks: Week[];
 }
 
 interface Props {
-  course: Course;
+  course: Partial<Course>;
 }
 
 const CourseCard: React.FC<Props> = ({ course }) => {
@@ -40,7 +44,7 @@ const CourseCard: React.FC<Props> = ({ course }) => {
   const { user } = useAuth();
 
   const handleSubmit = () => {
-    navigate(`/courses/${course._id}`);
+    navigate(`/courses/${course.id}`);
   };
 
   useEffect(() => {

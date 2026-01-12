@@ -1,36 +1,67 @@
-import React from "react";
-import AssessmentCard from "./AssessmentCard";
-import type { Assessment } from "./AssessmentCard";
-import "./Assessments.css";
+import React, { useEffect, useState } from "react";
+import AssessmentCard from "./components/AssessmentCard";
 
-const assessments: Assessment[] = [
-  {
-    id: "a1",
-    title: "JavaScript Basics Quiz",
-    description: "Test your understanding of fundamental JavaScript concepts.",
-    difficulty: "Beginner",
-  },
-  {
-    id: "a2",
-    title: "CSS Layout Challenge",
-    description: "Show your skills with Flexbox, Grid, and layouts.",
-    difficulty: "Intermediate",
-  },
-  {
-    id: "a3",
-    title: "React Mini Project",
-    description: "Build a small React component with state and props.",
-    difficulty: "Advanced",
-  },
-];
+import "./Assessments.css";
+import axios from "axios";
+
+// Question type
+export interface Question {
+  id: string;
+  question: string;
+  options: string[];
+  correctAnswer: string;
+}
+
+// Test type
+export interface Test {
+  id: string;
+  courseTitle: string;
+  title: string;
+  timeLimitMinutes: number;
+  passingScore: number;
+  questions: Question[];
+  createdAt?: Date; // optional because MongoDB will set it by default
+}
+
+type ResponseTestType = {
+  _id: string;
+  courseTitle: string;
+  title: string;
+  timeLimitMinutes: number;
+  passingScore: number;
+  questions: Question[];
+  createdAt?: Date;
+};
 
 const Assessments: React.FC = () => {
+  const [tests, setTests] = useState<Test[]>([]);
+
+  useEffect(() => {
+    const fetchTests = async () => {
+      const response = await axios.get("http://localhost:5001/api/v1/tests");
+
+      const backendTests = response.data.data as ResponseTestType[];
+
+      const mappedTests: Test[] = backendTests.map((test) => ({
+        id: test._id,
+        courseTitle: test.courseTitle,
+        title: test.title,
+        timeLimitMinutes: test.timeLimitMinutes,
+        passingScore: test.passingScore,
+        questions: test.questions,
+        createdAt: test.createdAt,
+      }));
+      setTests(mappedTests);
+    };
+    fetchTests();
+  }, []);
+
   return (
     <div className="assessments-container">
       <h1 className="page-title">Assessments</h1>
 
       <div className="assessments-grid">
-        {assessments.map((assessment) => (
+        {tests.map((assessment) => (
           <AssessmentCard key={assessment.id} assessment={assessment} />
         ))}
       </div>

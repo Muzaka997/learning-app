@@ -4,10 +4,9 @@ import { ToggleButton } from "./ThemeButton.styled";
 export default function ThemeButton() {
   const ctx = useThemeContext();
   const { toggleTheme } = ctx;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const darkMode = (ctx as any).darkMode ?? false;
+  const darkMode = ctx.darkmode ?? false;
 
-  return (
-    <ToggleButton onClick={toggleTheme}>{darkMode ? "☀️" : "🌑"}</ToggleButton>
-  );
+  const sunIcon = darkMode ? "☀️" : "🌑";
+
+  return <ToggleButton onClick={toggleTheme}>{sunIcon}</ToggleButton>;
 }
