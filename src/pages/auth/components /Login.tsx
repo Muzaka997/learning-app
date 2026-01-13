@@ -1,7 +1,20 @@
-import { Button, TextField, Box, Typography } from "@mui/material";
+import { Button, Typography } from "@mui/material";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../useAuth";
+import {
+  IconRight,
+  IconWrapper,
+  InputWrapper,
+  StyledBox,
+  StyledH,
+  StyledInput,
+  StyledWelcome,
+} from "./StyledLogin";
+import EmailIcon from "@mui/icons-material/Email";
+import PasswordIcon from "@mui/icons-material/Password";
+import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
+import VisibilityIcon from "@mui/icons-material/Visibility";
 
 export default function Login() {
   const { login } = useAuth();
@@ -10,6 +23,11 @@ export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+
+  const createAcc = () => {
+    navigate("/register");
+  };
 
   const handleSubmit = async (e?: React.FormEvent) => {
     if (e) e.preventDefault(); // prevent page reload
@@ -24,29 +42,39 @@ export default function Login() {
   };
 
   return (
-    <Box sx={{ maxWidth: 400, mx: "auto", mt: 8 }}>
-      <Typography variant="h5" mb={2}>
-        Login
-      </Typography>
+    <StyledBox>
+      <p>Welcome!</p>
+      <StyledWelcome>Sign into your account</StyledWelcome>
 
       {/* Wrap inputs in a form to handle Enter */}
       <form onSubmit={handleSubmit}>
-        <TextField
-          label="Email"
-          fullWidth
-          margin="normal"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-        />
+        <StyledH>Email</StyledH>
+        <InputWrapper>
+          <IconWrapper>
+            <EmailIcon />
+          </IconWrapper>
+          <StyledInput
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder="Email"
+          />
+        </InputWrapper>
 
-        <TextField
-          label="Password"
-          type="password"
-          fullWidth
-          margin="normal"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-        />
+        <StyledH>Password</StyledH>
+        <InputWrapper>
+          <IconWrapper>
+            <PasswordIcon />
+          </IconWrapper>
+          <StyledInput
+            type={showPassword ? "text" : "password"} // toggle visibility
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            placeholder="Password"
+          />
+          <IconRight onClick={() => setShowPassword(!showPassword)}>
+            {showPassword ? <VisibilityOffIcon /> : <VisibilityIcon />}
+          </IconRight>
+        </InputWrapper>
 
         {error && <Typography color="error">{error}</Typography>}
 
@@ -58,7 +86,10 @@ export default function Login() {
         >
           Login
         </Button>
+        <Button onClick={createAcc} fullWidth>
+          Create New Account
+        </Button>
       </form>
-    </Box>
+    </StyledBox>
   );
 }

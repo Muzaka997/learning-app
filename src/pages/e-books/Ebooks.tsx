@@ -18,6 +18,14 @@ type Book = {
   pdf?: string;
 };
 
+// type ResponeBookType = {
+//   _id: string;
+//   title: string;
+//   author: string;
+//   description: string;
+//   image: string;
+//   pdf?: string;
+// };
 const EBooks: React.FC = () => {
   const [submitted, setSubmitted] = useState<boolean>(false);
   const [filteredBooks, setFilteredBooks] = useState<Book[]>([]);
@@ -39,11 +47,11 @@ const EBooks: React.FC = () => {
     const fetchBooks = async () => {
       const response = await axios.get("http://localhost:5001/api/v1/books");
 
-      const backendBooks = response.data.data;
+      const backendBooks = response.data.data as Book[];
 
       // Map backend data → frontend Book interface
-      const mappedBooks: Book[] = backendBooks.map((book: any) => ({
-        id: book._id,
+      const mappedBooks: Book[] = backendBooks.map((book) => ({
+        id: book.id,
         title: book.title,
         author: book.author,
         description: book.description,
@@ -166,7 +174,7 @@ const EBooks: React.FC = () => {
           <iframe
             src={`http://localhost:5001/uploads/${activePdf}`}
             width="100%"
-            height="50%"
+            height="70%"
             style={{ border: "none" }}
             title="PDF Reader"
           />

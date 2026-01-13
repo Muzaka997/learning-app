@@ -1,9 +1,9 @@
 import styled from "styled-components";
 
 export const ToggleButton = styled.button`
-  position: fixed;
+  /* position: fixed;
   top: 20px;
-  right: 20px;
+  right: 20px; */
 
   padding: 0.6rem 1.2rem;
   font-size: 1rem;

@@ -5,6 +5,7 @@ export const StyledContainer = styled.div<{ $darkMode: boolean }>`
   flex-direction: column;
   gap: 20px;
   height: 200vh;
+  width: 100vh;
   padding-top: 24px;
   color: ${(p) => p.theme.text};
   background-color: ${(p) => p.theme.background};
@@ -12,7 +13,7 @@ export const StyledContainer = styled.div<{ $darkMode: boolean }>`
 `;
 
 export const StyledCoursesContainer = styled.div`
-  width: 450vw;
+  width: 80vw;
   display: flex;
   flex-wrap: wrap;
   gap: 20px;

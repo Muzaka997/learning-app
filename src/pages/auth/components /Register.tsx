@@ -1,7 +1,21 @@
-import { Button, TextField, Box, Typography } from "@mui/material";
+import { Button, Typography } from "@mui/material";
 import { useState } from "react";
 import { useAuth } from "../useAuth";
 import { useNavigate } from "react-router-dom";
+import {
+  IconRight,
+  IconWrapper,
+  InputWrapper,
+  StyledBox,
+  StyledH,
+  StyledInput,
+  StyledWelcome,
+} from "./StyledLogin";
+import PersonIcon from "@mui/icons-material/Person";
+import EmailIcon from "@mui/icons-material/Email";
+import PasswordIcon from "@mui/icons-material/Password";
+import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
+import VisibilityIcon from "@mui/icons-material/Visibility";
 
 export default function Register() {
   const { register } = useAuth();
@@ -12,6 +26,7 @@ export default function Register() {
   const [password, setPassword] = useState("");
   const [repeatPassword, setRepeatPassword] = useState(""); // New state for repeat password
   const [passwordError, setPasswordError] = useState(""); // State to handle error message
+  const [showPassword, setShowPassword] = useState(false);
 
   const handleSubmit = async () => {
     if (password !== repeatPassword) {
@@ -25,56 +40,88 @@ export default function Register() {
     navigate("/");
   };
 
+  const goPrevPage = () => {
+    navigate("/login");
+  };
+
   return (
-    <Box sx={{ maxWidth: 400, mx: "auto", mt: 8 }}>
-      <Typography variant="h5" mb={2}>
-        Register
-      </Typography>
-
-      <TextField
-        label="Name"
-        fullWidth
-        margin="normal"
-        value={name}
-        onChange={(e) => setName(e.target.value)}
-      />
-
-      <TextField
-        label="Email"
-        fullWidth
-        margin="normal"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-      />
-
-      <TextField
-        label="Password"
-        type="password"
-        fullWidth
-        margin="normal"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-      />
-
-      <TextField
-        label="Repeat Password"
-        type="password"
-        fullWidth
-        margin="normal"
-        value={repeatPassword}
-        onChange={(e) => setRepeatPassword(e.target.value)}
-        error={!!passwordError} // Show error if passwords don't match
-        helperText={passwordError} // Show the error message
-      />
-
-      <Button
-        variant="contained"
-        fullWidth
-        sx={{ mt: 2 }}
-        onClick={handleSubmit}
-      >
-        Register
-      </Button>
-    </Box>
+    <>
+      <StyledBox>
+        <Button
+          variant="text"
+          fullWidth
+          sx={{ mt: 2, justifyContent: "flex-start" }}
+          onClick={goPrevPage}
+        >
+          Previous Page
+        </Button>
+        <StyledWelcome>Register</StyledWelcome>
+        <form onSubmit={handleSubmit}>
+          <StyledH>Name</StyledH>
+          <InputWrapper>
+            <IconWrapper>
+              <PersonIcon></PersonIcon>
+            </IconWrapper>
+            <StyledInput
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              placeholder="Name"
+            />
+          </InputWrapper>
+          <StyledH>Email</StyledH>
+          <InputWrapper>
+            <IconWrapper>
+              <EmailIcon />
+            </IconWrapper>
+            <StyledInput
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="Email"
+            />
+          </InputWrapper>
+          <StyledH>Password</StyledH>
+          <InputWrapper>
+            <IconWrapper>
+              <PasswordIcon />
+            </IconWrapper>
+            <StyledInput
+              type={showPassword ? "text" : "password"} // toggle visibility
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              placeholder="Password"
+            />
+            <IconRight onClick={() => setShowPassword(!showPassword)}>
+              {showPassword ? <VisibilityOffIcon /> : <VisibilityIcon />}
+            </IconRight>
+          </InputWrapper>
+          <StyledH>Repeat Password</StyledH>
+          <InputWrapper>
+            <IconWrapper>
+              <PasswordIcon />
+            </IconWrapper>
+            <StyledInput
+              type={showPassword ? "text" : "password"} // toggle visibility
+              value={repeatPassword}
+              onChange={(e) => setRepeatPassword(e.target.value)}
+              placeholder="Repeat password"
+            />
+            <IconRight onClick={() => setShowPassword(!showPassword)}>
+              {showPassword ? <VisibilityOffIcon /> : <VisibilityIcon />}
+            </IconRight>
+          </InputWrapper>
+          {passwordError && (
+            <Typography color="error">{passwordError}</Typography>
+          )}
+          <Button
+            variant="contained"
+            fullWidth
+            sx={{ mt: 2 }}
+            onClick={handleSubmit}
+          >
+            Register
+          </Button>
+        </form>
+      </StyledBox>
+    </>
   );
 }

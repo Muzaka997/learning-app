@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from "react";
-import CourseCard from "./components/CourseCard/CourseCard";
-import type { Course } from "./components/CourseCard/CourseCard";
 
 import axios from "axios";
 import { StyledContainer, StyledCoursesContainer } from "./Courses.styled";
+import CourseCard, { type Course } from "./components/CourseCard/CourseCard";
 
 const CoursesPage: React.FC = () => {
   const [courses, setCourses] = useState<Course[]>([]);
@@ -17,15 +16,19 @@ const CoursesPage: React.FC = () => {
       // 🔁 Map backend data → frontend Course interface
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const mappedCourses: Course[] = backendCourses.map((course: any) => ({
-        _id: course._id,
+        id: course._id,
         title: course.title,
         description: course.description,
         image: course.image,
-        videos: course.videos || [],
-        homeworks: course.homeworks || [],
+        tuition: course.tuition,
+        minimumSkill: course.minimumSkill,
+        scholarshipAvailable: course.scholarshipsAvailable,
+        user: course.user, // optional
+        Weeks: course.Weeks, // optional, empty for list page
       }));
 
       setCourses(mappedCourses);
+      console.log(mappedCourses);
     };
 
     fetchCourses();
@@ -37,7 +40,7 @@ const CoursesPage: React.FC = () => {
 
       <StyledCoursesContainer>
         {courses.map((course) => (
-          <CourseCard key={course._id} course={course} />
+          <CourseCard key={course.id} course={course} />
         ))}
       </StyledCoursesContainer>
     </StyledContainer>
