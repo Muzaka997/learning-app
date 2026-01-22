@@ -48,3 +48,41 @@ export const StyledTextField = styled.input<{ $darkMode: boolean }>`
   border: 1px solid ${(p) => p.theme.text};
   border-radius: 4px;
 `;
+
+export const PdfOverlay = styled.div`
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.75);
+  backdrop-filter: blur(6px);
+  z-index: 999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
+
+export const PdfCard = styled.div`
+  width: 80vw;
+  height: 90vh;
+  background: #020617;
+  border-radius: 16px;
+  overflow: hidden;
+  position: relative;
+  box-shadow: 0 0 80px rgba(0, 0, 0, 0.9);
+`;
+
+export const CloseButton = styled.button`
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background: #1e293b;
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  z-index: 2;
+
+  &:hover {
+    background: #334155;
+  }
+`;

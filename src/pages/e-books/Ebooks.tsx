@@ -5,6 +5,9 @@ import {
   StyledSearchContainer,
   StyledButton,
   StyledTextField,
+  PdfCard,
+  PdfOverlay,
+  CloseButton,
 } from "./Ebooks.styled";
 import axios from "axios";
 import BookCard from "./components/Ebook/BookCard";
@@ -75,7 +78,7 @@ const EBooks: React.FC = () => {
       const results = allBooks.filter(
         (book) =>
           book.title.toLowerCase().includes(value) ||
-          book.author.toLowerCase().includes(value)
+          book.author.toLowerCase().includes(value),
       );
       setFilteredBooks(results);
     }
@@ -86,7 +89,7 @@ const EBooks: React.FC = () => {
   // Calculate the current page books
   const currentBooks = filteredBooks.slice(
     (currentPage - 1) * booksPerPage,
-    currentPage * booksPerPage
+    currentPage * booksPerPage,
   );
 
   // Handle page change
@@ -163,22 +166,21 @@ const EBooks: React.FC = () => {
         </>
       ) : (
         /* ================= PDF VIEW ================= */
-        <>
-          <button
-            onClick={() => setActivePdf(null)}
-            style={{ marginBottom: "12px" }}
-          >
-            ← Back to library
-          </button>
+        <PdfOverlay onClick={() => setActivePdf(null)}>
+          <PdfCard onClick={(e) => e.stopPropagation()}>
+            <CloseButton onClick={() => setActivePdf(null)}>✕</CloseButton>
 
-          <iframe
-            src={`http://localhost:5001/uploads/${activePdf}`}
-            width="100%"
-            height="70%"
-            style={{ border: "none" }}
-            title="PDF Reader"
-          />
-        </>
+            <iframe
+              src={`http://localhost:5001/uploads/${activePdf}`}
+              title="PDF Reader"
+              style={{
+                width: "100%",
+                height: "100%",
+                border: "none",
+              }}
+            />
+          </PdfCard>
+        </PdfOverlay>
       )}
     </EBooksContainer>
   );

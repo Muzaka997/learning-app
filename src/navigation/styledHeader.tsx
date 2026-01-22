@@ -9,7 +9,7 @@ export const HeaderWrapper = styled.header`
   padding: 10px 20px;
   font-family: sans-serif;
   width: 160vh;
-  max-width: 100vw - 250px;
+
   margin-left: 230px;
 `;
 
@@ -42,7 +42,7 @@ export const AccountBox = styled.div`
   align-items: center;
   gap: 10px;
   cursor: pointer;
-  margin-left: 15px;
+  margin-left: 55px;
 `;
 
 export const Avatar = styled.img`
