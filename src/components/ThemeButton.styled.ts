@@ -5,11 +5,11 @@ export const ToggleButton = styled.button`
   top: 20px;
   right: 20px; */
 
-  padding: 0.6rem 1.2rem;
+  /* padding: 0.6rem 1.2rem;
   font-size: 1rem;
-  font-weight: 500;
+  font-weight: 500; */
 
-  background: ${(p) => p.theme.sidebarBackground || "#222"};
+  /* background: ${(p) => p.theme.sidebarBackground || "#222"};
   color: ${(p) => p.theme.sidebarText || "white"};
 
   border: 1px solid transparent;
@@ -20,5 +20,5 @@ export const ToggleButton = styled.button`
 
   &:hover {
     background: ${(p) => p.theme.sidebarHover || "#444"};
-  }
+  } */
 `;

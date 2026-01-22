@@ -12,9 +12,11 @@ import {
 import { Avatar } from "@mui/material";
 
 import ThemeButton from "../components/ThemeButton";
+import AccountMenu from "./components/accountMenu";
 
 const Header: React.FC = () => {
-  const { user, logout } = useAuth();
+  const { user } = useAuth();
+  const [open, setOpen] = React.useState(false);
   const navigate = useNavigate();
 
   return (
@@ -23,30 +25,34 @@ const Header: React.FC = () => {
 
       <NavButtons>
         {user ? (
-          <>
-            <AccountBox onClick={() => navigate("/profile")}>
+          <div
+            style={{
+              position: "relative",
+              display: "flex",
+              alignItems: "center",
+              gap: "15px",
+            }}
+          >
+            <AccountBox onClick={() => setOpen(!open)}>
               <Avatar
-                src={
-                  user.profilePhoto
-                    ? `http://localhost:5001${user.profilePhoto}`
-                    : "/default-avatar.png"
-                }
+                src={user.profilePhoto || "/default-avatar.png"}
+                alt="Profile"
               />
               <span>My Account</span>
             </AccountBox>
 
-            <NavButton onClick={logout}>Logout</NavButton>
-          </>
+            {open && <AccountMenu close={() => setOpen(false)} />}
+            <ThemeButton />
+          </div>
         ) : (
           <>
             <NavButton onClick={() => navigate("/login")}>Login</NavButton>
             <NavButton onClick={() => navigate("/register")}>
               Register
             </NavButton>
+            <ThemeButton />
           </>
         )}
-
-        <ThemeButton />
       </NavButtons>
     </HeaderWrapper>
   );
