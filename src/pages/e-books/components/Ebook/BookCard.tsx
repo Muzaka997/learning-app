@@ -1,6 +1,5 @@
 import type { FC } from "react";
 import { BookCardStyles, StyledButton, StyledImage } from "./BookCard.styles";
-import { useAuth } from "../../../auth/useAuth";
 
 type Book = {
   id: string;
@@ -15,7 +14,6 @@ const BookCard: FC<{ book: Book; onRead: (pdf: string) => void }> = ({
   book,
   onRead,
 }) => {
-  const { user } = useAuth();
   return (
     <BookCardStyles key={book.id}>
       <StyledImage
@@ -23,11 +21,13 @@ const BookCard: FC<{ book: Book; onRead: (pdf: string) => void }> = ({
         alt={`${book.title} image`}
       />
       <strong>{book.title}</strong> by {book.author}
-      {user ? (
-        <StyledButton onClick={() => onRead(book.pdf!)}>Read</StyledButton>
-      ) : (
-        <StyledButton disabled>Please log in to read this book.</StyledButton>
-      )}
+      <StyledButton
+        type="button"
+        disabled={!book.pdf}
+        onClick={() => onRead(book.pdf!)}
+      >
+        Read
+      </StyledButton>
     </BookCardStyles>
   );
 };
