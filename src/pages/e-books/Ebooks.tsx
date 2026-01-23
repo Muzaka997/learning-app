@@ -17,7 +17,10 @@ type Book = {
   title: string;
   author: string;
   description: string;
-  image: string;
+  image: {
+    url: string;
+    publicId: string;
+  };
   pdf?: string;
 };
 

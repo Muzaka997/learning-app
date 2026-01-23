@@ -6,7 +6,10 @@ type Book = {
   title: string;
   author: string;
   description: string;
-  image: string;
+  image: {
+    url: string;
+    publicId: string;
+  };
   pdf?: string;
 };
 
@@ -17,8 +20,9 @@ const BookCard: FC<{ book: Book; onRead: (pdf: string) => void }> = ({
   return (
     <BookCardStyles key={book.id}>
       <StyledImage
-        src={`http://localhost:5001/uploads/${book.image}`}
-        alt={`${book.title} image`}
+        src={book.image?.url || "/placeholder.jpg"}
+        alt={`${book.title} cover`}
+        loading="lazy"
       />
       <strong>{book.title}</strong> by {book.author}
       <StyledButton

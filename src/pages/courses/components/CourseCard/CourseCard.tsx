@@ -1,10 +1,9 @@
-import React, { useEffect, useState } from "react";
 import {
   StyledButton,
   StyledCourseCard,
   StyledImage,
 } from "./CourseCard.styles";
-import axios from "axios";
+
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../../auth/useAuth";
 
@@ -30,7 +29,10 @@ export interface Course {
   tuition: number;
   minimumSkill: "beginner" | "intermediate" | "advanced";
   scholarshipAvailable: boolean;
-  image: string;
+  image: {
+    url: string;
+    publicId: string;
+  };
   Weeks: Week[];
 }
 
@@ -39,7 +41,6 @@ interface Props {
 }
 
 const CourseCard: React.FC<Props> = ({ course }) => {
-  const [imageUrl, setImageUrl] = useState<string>("");
   const navigate = useNavigate();
   const { user } = useAuth();
 
@@ -47,47 +48,17 @@ const CourseCard: React.FC<Props> = ({ course }) => {
     navigate(`/courses/${course.id}`);
   };
 
-  useEffect(() => {
-    let isMounted = true; // flag to prevent state update if component unmounts
-    let objectUrl: string | null = null; // store the local URL
-
-    const fetchImage = async () => {
-      try {
-        const response = await axios.get(
-          `http://localhost:5001/uploads/${course.image}`,
-          { responseType: "blob" }
-        );
-
-        objectUrl = URL.createObjectURL(response.data);
-
-        if (isMounted) {
-          setImageUrl(objectUrl);
-        }
-      } catch (error) {
-        console.error("Error fetching image:", error);
-      }
-    };
-
-    fetchImage();
-
-    // Cleanup: revoke the object URL to prevent memory leaks
-    return () => {
-      isMounted = false;
-      if (objectUrl) {
-        URL.revokeObjectURL(objectUrl);
-      }
-    };
-  }, [course.image]);
-
   return (
     <StyledCourseCard $darkMode={false}>
-      {imageUrl ? (
-        <StyledImage src={imageUrl} alt={course.title} />
+      {course.image?.url ? (
+        <StyledImage src={course.image.url} alt={course.title} loading="lazy" />
       ) : (
-        <p>Loading image...</p>
+        <p>No image available</p>
       )}
+
       <h3>{course.title}</h3>
       <p>{course.description}</p>
+
       {user ? (
         <StyledButton onClick={handleSubmit}>View Course</StyledButton>
       ) : (
