@@ -34,7 +34,7 @@ const CoursePage = () => {
     const fetchCourse = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:5001/api/v1/courses/${id}`
+          `https://devcamper-api-i20h.onrender.com/api/v1/courses/${id}`,
         );
         setCourse(response.data.data);
       } catch (error) {

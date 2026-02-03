@@ -6,11 +6,8 @@ import AssignmentIcon from "@mui/icons-material/Assignment";
 import MenuBookIcon from "@mui/icons-material/MenuBook";
 import EmailIcon from "@mui/icons-material/Email";
 
-import LogoutIcon from "@mui/icons-material/Logout";
-import PersonIcon from "@mui/icons-material/Person";
-
 export default function NavBar() {
-  const { user, logout } = useAuth();
+  const { user } = useAuth();
 
   return (
     <NavBarWrapper>
@@ -37,12 +34,6 @@ export default function NavBar() {
           </NavItem>
           <NavItem to="/contactus">
             <EmailIcon /> Contact Us
-          </NavItem>
-          <NavItem to="/profile">
-            <PersonIcon /> {user.name}
-          </NavItem>
-          <NavItem to="/login" onClick={logout}>
-            <LogoutIcon /> Logout
           </NavItem>
         </>
       )}

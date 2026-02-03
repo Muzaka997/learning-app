@@ -9,7 +9,9 @@ const CoursesPage: React.FC = () => {
 
   useEffect(() => {
     const fetchCourses = async () => {
-      const response = await axios.get("http://localhost:5001/api/v1/courses");
+      const response = await axios.get(
+        "https://devcamper-api-i20h.onrender.com/api/v1/courses",
+      );
 
       const backendCourses = response.data.data;
 

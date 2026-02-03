@@ -51,7 +51,9 @@ const EBooks: React.FC = () => {
   // Fetch books from the backend
   useEffect(() => {
     const fetchBooks = async () => {
-      const response = await axios.get("http://localhost:5001/api/v1/books");
+      const response = await axios.get(
+        "https://devcamper-api-i20h.onrender.com/api/v1/books",
+      );
 
       const backendBooks = response.data.data as Book[];
 
@@ -138,7 +140,11 @@ const EBooks: React.FC = () => {
               <BookCard
                 book={book}
                 key={book.id}
-                onRead={(pdf) => setActivePdf(pdf)}
+                onRead={(pdf) =>
+                  setActivePdf(
+                    `https://devcamper-api-i20h.onrender.com/uploads/${pdf}`,
+                  )
+                }
               />
             ))}
           </StyledBooksContainer>
@@ -174,7 +180,7 @@ const EBooks: React.FC = () => {
             <CloseButton onClick={() => setActivePdf(null)}>✕</CloseButton>
 
             <iframe
-              src={`http://localhost:5001/uploads/${activePdf}`}
+              src={activePdf}
               title="PDF Reader"
               style={{
                 width: "100%",

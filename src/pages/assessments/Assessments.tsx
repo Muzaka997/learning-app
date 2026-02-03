@@ -9,7 +9,6 @@ export interface Question {
   id: string;
   question: string;
   options: string[];
-  correctAnswer: string;
 }
 
 // Test type
@@ -38,7 +37,9 @@ const Assessments: React.FC = () => {
 
   useEffect(() => {
     const fetchTests = async () => {
-      const response = await axios.get("http://localhost:5001/api/v1/tests");
+      const response = await axios.get(
+        "https://devcamper-api-i20h.onrender.com/api/v1/tests",
+      );
 
       const backendTests = response.data.data as ResponseTestType[];
 
