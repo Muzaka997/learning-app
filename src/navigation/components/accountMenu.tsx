@@ -13,6 +13,7 @@ const AccountMenu: React.FC<AccountMenuProps> = ({ close }) => {
 
   const handleLogout = () => {
     logout();
+    navigate("/login");
     close();
   };
 

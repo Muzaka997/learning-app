@@ -1,8 +1,7 @@
 import axios from "axios";
 
 const authApi = axios.create({
-  baseURL: "http://localhost:5001/api/v1",
-  withCredentials: true, // 👈 REQUIRED for cookies
+  baseURL: "https://devcamper-api-i20h.onrender.com/api/v1",
 });
 
 export default authApi;

@@ -26,12 +26,12 @@ const UploadPhoto: React.FC = () => {
 
     try {
       const res = await fetch(
-        `http://localhost:5001/api/v1/users/${user._id}/photo`,
+        `https://devcamper-api-i20h.onrender.com/api/v1/users/${user._id}/photo`,
         {
           method: "PUT",
           body: formData,
           credentials: "include", // if using cookie JWT
-        }
+        },
       );
 
       const data: { success: boolean; imageUrl?: string; error?: string } =
@@ -40,7 +40,7 @@ const UploadPhoto: React.FC = () => {
       if (!res.ok || !data.success)
         throw new Error(data.error || "Upload failed");
 
-      setImageUrl(`http://localhost:5001${data.imageUrl}`);
+      setImageUrl(`https://devcamper-api-i20h.onrender.com${data.imageUrl}`);
 
       if (user) {
         setUser({ ...user, profilePhoto: data.imageUrl });

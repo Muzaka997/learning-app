@@ -26,7 +26,6 @@ export default function App() {
       <GlobalStyles />
 
       <BrowserRouter>
-        {/* 🔐 AUTH PROVIDER MUST BE HERE */}
         <AuthProvider>
           <Routes>
             <Route path="/login" element={<Login />} />
