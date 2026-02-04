@@ -8,7 +8,7 @@ export const HeaderWrapper = styled.header`
   color: white;
   padding: 10px 20px;
   font-family: sans-serif;
-  width: 160vh;
+  width: 180vh;
 
   margin-left: 230px;
 `;
