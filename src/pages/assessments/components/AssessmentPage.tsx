@@ -1,13 +1,18 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 
 import type { Test } from "../Assessments";
 import {
   Options,
+  PrimaryButton,
   QuestionCard,
   QuestionTitle,
   QuizContainer,
   QuizHeader,
+  ResultActions,
+  ResultContainer,
+  ResultSubtitle,
+  ResultTitle,
   StyledOption,
   SubmitButton,
 } from "./AssessmentPage.styled";
@@ -16,6 +21,7 @@ import { useAuth } from "../../auth/useAuth";
 
 const TestPage = () => {
   const { id } = useParams<{ id: string }>();
+  const navigate = useNavigate();
   const [test, setTest] = useState<Test | null>(null);
   const [answers, setAnswers] = useState<Record<string, string>>({});
   const [submitted, setSubmitted] = useState(false);
@@ -29,12 +35,16 @@ const TestPage = () => {
 
   // Fetch test
   useEffect(() => {
-    if (!id) return;
+    if (!id) {
+      console.error("No id param present");
+      return;
+    }
 
     const fetchTest = async () => {
       try {
         const response = await authApi.get(`/tests/${id}`);
         const backendTest = response.data.data;
+        console.log("Fetching test id =", id);
 
         if (backendTest.submitted) {
           alert(
@@ -120,11 +130,16 @@ const TestPage = () => {
       </QuizHeader>
       {submitted && result ? (
         // ✅ Show only results — hide all questions
-        <div style={{ marginTop: "20px" }}>
-          <h2>You have already completed this test.</h2>
-          <h3>
+        <ResultContainer>
+          <ResultActions>
+            <PrimaryButton onClick={() => navigate("/assessments")}>
+              Back to Assessments
+            </PrimaryButton>
+          </ResultActions>
+          <ResultTitle>You have already completed this test.</ResultTitle>
+          <ResultSubtitle>
             Score: {result.score}% — {result.passed ? "Passed 🎉" : "Failed"}
-          </h3>
+          </ResultSubtitle>
 
           {/* Optional: Show answers with correct/wrong highlights */}
           {test.questions.map((question, index) => {
@@ -156,7 +171,7 @@ const TestPage = () => {
               </QuestionCard>
             );
           })}
-        </div>
+        </ResultContainer>
       ) : (
         // ✅ Show only the current question while taking the test
         <QuestionCard key={currentQuestion.id}>

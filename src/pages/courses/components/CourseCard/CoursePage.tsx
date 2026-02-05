@@ -15,6 +15,7 @@ import {
   WeekSummary,
   WeekTitle,
 } from "./StyledCoursePage";
+import config from "../../../../config";
 
 const getYouTubeId = (url?: string) => {
   if (!url) return null;
@@ -33,9 +34,7 @@ const CoursePage = () => {
   useEffect(() => {
     const fetchCourse = async () => {
       try {
-        const response = await axios.get(
-          `https://devcamper-api-i20h.onrender.com/api/v1/courses/${id}`,
-        );
+        const response = await axios.get(`${config.apiBaseURL}/courses/${id}`);
         setCourse(response.data.data);
       } catch (error) {
         console.error("Error fetching course details:", error);

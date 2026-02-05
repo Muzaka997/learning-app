@@ -4,13 +4,17 @@ export const HeaderWrapper = styled.header`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background-color: grey;
-  color: white;
-  padding: 10px 20px;
+  color: ${(p) => p.theme.text};
+  background-color: ${(p) => p.theme.background};
+  transition:
+    background-color 0.25s ease,
+    color 0.25s ease;
+  padding: 4px 20px;
   font-family: sans-serif;
-  width: 165vh;
-
+  width: 167vh;
   margin-left: 230px;
+  border: 2px solid rgba(0, 0, 0, 0.08);
+  border-radius: 2px;
 `;
 
 export const Logo = styled.div`
@@ -22,6 +26,8 @@ export const Logo = styled.div`
 export const NavButtons = styled.div`
   display: flex;
   align-items: center;
+  margin-left: auto;
+  gap: 12px;
 `;
 
 export const NavButton = styled.button`
@@ -42,7 +48,15 @@ export const AccountBox = styled.div`
   align-items: center;
   gap: 10px;
   cursor: pointer;
-  margin-left: 55px;
+  padding: 6px 8px;
+  border-radius: 8px;
+  transition:
+    background 160ms ease,
+    transform 120ms ease;
+  &:hover {
+    background: rgba(255, 255, 255, 0.02);
+    transform: translateY(-2px);
+  }
 `;
 
 export const Avatar = styled.img`

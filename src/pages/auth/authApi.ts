@@ -1,7 +1,8 @@
 import axios from "axios";
+import config from "../../config";
 
 const authApi = axios.create({
-  baseURL: "https://devcamper-api-i20h.onrender.com/api/v1",
+  baseURL: config.apiBaseURL,
 });
 
 export default authApi;

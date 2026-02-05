@@ -40,8 +40,11 @@ export const WeekDetails = styled.details`
   border: 1px solid #e5e7eb;
   border-radius: 14px;
   padding: 16px 20px;
-  background: #ffffff;
-  transition: all 0.25s ease;
+  color: ${(p) => p.theme.text};
+  background-color: ${(p) => p.theme.background};
+  transition:
+    background-color 0.25s ease,
+    color 0.25s ease;
   overflow: hidden;
 
   &[open] {
@@ -106,7 +109,11 @@ export const HomeworkBlock = styled.div`
   margin-top: 12px;
   padding: 14px 16px;
   border-radius: 12px;
-  background: #fff7ed;
+  color: ${(p) => p.theme.text};
+  background-color: ${(p) => p.theme.background};
+  transition:
+    background-color 0.25s ease,
+    color 0.25s ease;
   border: 1px solid #fed7aa;
   font-size: 0.95rem;
   line-height: 1.5;

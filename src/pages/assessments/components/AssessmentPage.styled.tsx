@@ -58,10 +58,10 @@ export const StyledOption = styled.label<{
       correct
         ? "#16a34a"
         : wrong
-        ? "#dc2626"
-        : selected
-        ? "#4f46e5"
-        : "#e5e7eb"};
+          ? "#dc2626"
+          : selected
+            ? "#4f46e5"
+            : "#e5e7eb"};
 
   background: ${({ correct, wrong, selected }) =>
     correct ? "#dcfce7" : wrong ? "#fee2e2" : selected ? "#eef2ff" : "#ffffff"};
@@ -97,4 +97,47 @@ export const SubmitButton = styled.button`
   &:hover {
     background: #4338ca;
   }
+`;
+export const ResultContainer = styled.div`
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+`;
+
+export const ResultActions = styled.div`
+  display: flex;
+  gap: 12px;
+  align-items: center;
+`;
+export const PrimaryButton = styled.button`
+  padding: 10px 14px;
+  background: linear-gradient(90deg, #4f46e5, #18a6ff);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 8px 20px rgba(24, 166, 255, 0.12);
+  transition:
+    transform 120ms ease,
+    opacity 120ms ease;
+
+  &:hover {
+    transform: translateY(-2px);
+    opacity: 0.98;
+  }
+`;
+
+export const ResultTitle = styled.h2`
+  margin: 0;
+  font-size: 1.25rem;
+  color: #111827;
+`;
+
+export const ResultSubtitle = styled.h3`
+  margin: 0;
+  font-size: 1rem;
+  color: #374151;
+  font-weight: 600;
 `;

@@ -11,6 +11,7 @@ import {
 } from "./Ebooks.styled";
 import axios from "axios";
 import BookCard from "./components/Ebook/BookCard";
+import config from "../../config";
 
 type Book = {
   id: string;
@@ -51,9 +52,7 @@ const EBooks: React.FC = () => {
   // Fetch books from the backend
   useEffect(() => {
     const fetchBooks = async () => {
-      const response = await axios.get(
-        "https://devcamper-api-i20h.onrender.com/api/v1/books",
-      );
+      const response = await axios.get(`${config.apiBaseURL}/books`);
 
       const backendBooks = response.data.data as Book[];
 
@@ -141,9 +140,7 @@ const EBooks: React.FC = () => {
                 book={book}
                 key={book.id}
                 onRead={(pdf) =>
-                  setActivePdf(
-                    `https://devcamper-api-i20h.onrender.com/uploads/${pdf}`,
-                  )
+                  setActivePdf(`${config.apiBaseURL}/uploads/${pdf}`)
                 }
               />
             ))}
