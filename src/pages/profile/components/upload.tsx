@@ -1,5 +1,6 @@
 import { useState, type ChangeEvent, type FormEvent } from "react";
 import { useAuth } from "../../auth/useAuth";
+import config from "../../../config";
 
 const UploadPhoto: React.FC = () => {
   const { user, setUser } = useAuth();
@@ -25,14 +26,11 @@ const UploadPhoto: React.FC = () => {
     formData.append("photo", file);
 
     try {
-      const res = await fetch(
-        `https://devcamper-api-i20h.onrender.com/api/v1/users/${user._id}/photo`,
-        {
-          method: "PUT",
-          body: formData,
-          credentials: "include", // if using cookie JWT
-        },
-      );
+      const res = await fetch(`${config.apiBaseURL}/users/${user._id}/photo`, {
+        method: "PUT",
+        body: formData,
+        credentials: "include", // if using cookie JWT
+      });
 
       const data: { success: boolean; imageUrl?: string; error?: string } =
         await res.json();
@@ -40,7 +38,7 @@ const UploadPhoto: React.FC = () => {
       if (!res.ok || !data.success)
         throw new Error(data.error || "Upload failed");
 
-      setImageUrl(`https://devcamper-api-i20h.onrender.com${data.imageUrl}`);
+      setImageUrl(`${config.apiBaseURL}${data.imageUrl}`);
 
       if (user) {
         setUser({ ...user, profilePhoto: data.imageUrl });

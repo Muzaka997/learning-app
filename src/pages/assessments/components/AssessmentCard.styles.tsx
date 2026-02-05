@@ -1,7 +1,11 @@
 import styled from "styled-components";
 
 export const AssessmentCardContainer = styled.div`
-  background: #ffffff;
+  color: ${(p) => p.theme.text};
+  background-color: ${(p) => p.theme.background};
+  transition:
+    background-color 0.25s ease,
+    color 0.25s ease;
   border-radius: 12px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   padding: 20px;

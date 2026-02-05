@@ -3,15 +3,14 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { StyledContainer, StyledCoursesContainer } from "./Courses.styled";
 import CourseCard, { type Course } from "./components/CourseCard/CourseCard";
+import config from "../../config";
 
 const CoursesPage: React.FC = () => {
   const [courses, setCourses] = useState<Course[]>([]);
 
   useEffect(() => {
     const fetchCourses = async () => {
-      const response = await axios.get(
-        "https://devcamper-api-i20h.onrender.com/api/v1/courses",
-      );
+      const response = await axios.get(`${config.apiBaseURL}/courses`);
 
       const backendCourses = response.data.data;
 

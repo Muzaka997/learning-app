@@ -3,6 +3,7 @@ import AssessmentCard from "./components/AssessmentCard";
 
 import "./Assessments.css";
 import axios from "axios";
+import config from "../../config";
 
 // Question type
 export interface Question {
@@ -37,9 +38,7 @@ const Assessments: React.FC = () => {
 
   useEffect(() => {
     const fetchTests = async () => {
-      const response = await axios.get(
-        "https://devcamper-api-i20h.onrender.com/api/v1/tests",
-      );
+      const response = await axios.get(`${config.apiBaseURL}/tests`);
 
       const backendTests = response.data.data as ResponseTestType[];
 

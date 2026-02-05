@@ -4,7 +4,6 @@ import { useAuth } from "../pages/auth/useAuth";
 import {
   AccountBox,
   HeaderWrapper,
-  Logo,
   NavButton,
   NavButtons,
 } from "./styledHeader";
@@ -21,8 +20,6 @@ const Header: React.FC = () => {
 
   return (
     <HeaderWrapper>
-      <Logo onClick={() => navigate("/")}>MyApp</Logo>
-
       <NavButtons>
         {user ? (
           <div
