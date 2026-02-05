@@ -21,19 +21,32 @@ type Book = {
   pdf?: string;
 };
 
-const BookCard: FC<{ book: Book; onRead: (pdf: string) => void }> = ({
+const BookCard: FC<{ book: Book; onRead?: (pdf: string) => void }> = ({
   book,
   onRead,
 }) => {
+  const handleRead = () => {
+    if (!book.pdf) return;
+
+    // prefer parent handler, fallback to direct navigation
+    if (onRead) {
+      onRead(book.pdf);
+      return;
+    }
+    const url = book.pdf.startsWith("http") ? book.pdf : `/uploads/${book.pdf}`;
+    window.location.href = url;
+  };
+
   return (
-    <BookCardStyles key={book.id} aria-label={`book-${book.id}`}>
+    <BookCardStyles>
       <StyledImage
         src={book.image?.url || "/placeholder.jpg"}
         alt={`${book.title} cover`}
         loading="lazy"
-        onClick={() => book.pdf && onRead(book.pdf)}
+        onClick={handleRead}
         style={{ cursor: book.pdf ? "pointer" : "default" }}
       />
+
       <Info>
         <Title>{book.title}</Title>
         <Author>by {book.author}</Author>
@@ -46,12 +59,7 @@ const BookCard: FC<{ book: Book; onRead: (pdf: string) => void }> = ({
         )}
       </Info>
 
-      <StyledButton
-        type="button"
-        disabled={!book.pdf}
-        onClick={() => book.pdf && onRead(book.pdf)}
-        aria-disabled={!book.pdf}
-      >
+      <StyledButton type="button" disabled={!book.pdf} onClick={handleRead}>
         {book.pdf ? "Read" : "No PDF"}
       </StyledButton>
     </BookCardStyles>

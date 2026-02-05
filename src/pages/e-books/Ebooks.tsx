@@ -51,8 +51,8 @@ const EBooks: React.FC = () => {
     const fetchBooks = async () => {
       const response = await axios.get(`${config.apiBaseURL}/books`);
       const backendBooks = response.data.data as Book[];
-      const mappedBooks: Book[] = backendBooks.map((book) => ({
-        id: book.id,
+      const mappedBooks: Book[] = backendBooks.map((book, i) => ({
+        id: book.id ?? book.id ?? String(i),
         title: book.title,
         author: book.author,
         description: book.description,
@@ -98,18 +98,38 @@ const EBooks: React.FC = () => {
   };
 
   // Open pdf in overlay (already used by BookCard)
-  const openPdf = (pdf: string) => {
+  const openPdf = async (pdf: string) => {
     const url = pdf.startsWith("http")
       ? pdf
-      : `${config.apiBaseURL}/uploads/${pdf}`;
-    setActivePdf(url);
-    setPdfName(pdf);
-    setZoom(1);
+      : `${config.apiURL}/uploads/${pdf}`; // <-- use apiURL (no /api/v1)
+    try {
+      const res = await fetch(url, { credentials: "include" });
+      if (!res.ok) throw new Error("Failed to fetch PDF");
+      const blob = await res.blob();
+      const blobUrl = URL.createObjectURL(blob);
+      setActivePdf(blobUrl);
+      setPdfName(pdf);
+      setZoom(1);
+      // revoke when closed: URL.revokeObjectURL(blobUrl) in close handler
+    } catch (err) {
+      console.error("openPdf error", err);
+    }
   };
 
   // Download PDF via fetch + blob (avoids popup issues)
   const downloadPdf = async () => {
     if (!activePdf) return;
+
+    // if already a blob URL, just trigger download
+    if (activePdf.startsWith("blob:")) {
+      const a = document.createElement("a");
+      a.href = activePdf;
+      a.download = pdfName || "document.pdf";
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      return;
+    }
 
     const res = await fetch(activePdf, { credentials: "include" });
     if (!res.ok) throw new Error("Failed to fetch PDF");
@@ -196,7 +216,14 @@ const EBooks: React.FC = () => {
                 +
               </ToolbarButton>
               <ToolbarButton onClick={downloadPdf}>Download</ToolbarButton>
-              <CloseButton onClick={() => setActivePdf(null)}>
+              <CloseButton
+                onClick={() => {
+                  // when closing
+                  if (activePdf?.startsWith("blob:"))
+                    URL.revokeObjectURL(activePdf);
+                  setActivePdf(null);
+                }}
+              >
                 Close
               </CloseButton>
             </PdfToolbar>
