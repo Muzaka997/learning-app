@@ -1,5 +1,13 @@
 import type { FC } from "react";
-import { BookCardStyles, StyledButton, StyledImage } from "./BookCard.styles";
+import {
+  Author,
+  BookCardStyles,
+  Description,
+  Info,
+  StyledButton,
+  StyledImage,
+  Title,
+} from "./BookCard.styles";
 
 type Book = {
   id: string;
@@ -18,19 +26,33 @@ const BookCard: FC<{ book: Book; onRead: (pdf: string) => void }> = ({
   onRead,
 }) => {
   return (
-    <BookCardStyles key={book.id}>
+    <BookCardStyles key={book.id} aria-label={`book-${book.id}`}>
       <StyledImage
         src={book.image?.url || "/placeholder.jpg"}
         alt={`${book.title} cover`}
         loading="lazy"
+        onClick={() => book.pdf && onRead(book.pdf)}
+        style={{ cursor: book.pdf ? "pointer" : "default" }}
       />
-      <strong>{book.title}</strong> by {book.author}
+      <Info>
+        <Title>{book.title}</Title>
+        <Author>by {book.author}</Author>
+        {book.description && (
+          <Description>
+            {book.description.length > 120
+              ? `${book.description.slice(0, 120)}…`
+              : book.description}
+          </Description>
+        )}
+      </Info>
+
       <StyledButton
         type="button"
         disabled={!book.pdf}
-        onClick={() => onRead(book.pdf!)}
+        onClick={() => book.pdf && onRead(book.pdf)}
+        aria-disabled={!book.pdf}
       >
-        Read
+        {book.pdf ? "Read" : "No PDF"}
       </StyledButton>
     </BookCardStyles>
   );
