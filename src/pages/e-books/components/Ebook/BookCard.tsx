@@ -1,5 +1,13 @@
 import type { FC } from "react";
-import { BookCardStyles, StyledButton, StyledImage } from "./BookCard.styles";
+import {
+  Author,
+  BookCardStyles,
+  Description,
+  Info,
+  StyledButton,
+  StyledImage,
+  Title,
+} from "./BookCard.styles";
 
 type Book = {
   id: string;
@@ -13,24 +21,46 @@ type Book = {
   pdf?: string;
 };
 
-const BookCard: FC<{ book: Book; onRead: (pdf: string) => void }> = ({
+const BookCard: FC<{ book: Book; onRead?: (pdf: string) => void }> = ({
   book,
   onRead,
 }) => {
+  const handleRead = () => {
+    if (!book.pdf) return;
+
+    // prefer parent handler, fallback to direct navigation
+    if (onRead) {
+      onRead(book.pdf);
+      return;
+    }
+    const url = book.pdf.startsWith("http") ? book.pdf : `/uploads/${book.pdf}`;
+    window.location.href = url;
+  };
+
   return (
-    <BookCardStyles key={book.id}>
+    <BookCardStyles>
       <StyledImage
         src={book.image?.url || "/placeholder.jpg"}
         alt={`${book.title} cover`}
         loading="lazy"
+        onClick={handleRead}
+        style={{ cursor: book.pdf ? "pointer" : "default" }}
       />
-      <strong>{book.title}</strong> by {book.author}
-      <StyledButton
-        type="button"
-        disabled={!book.pdf}
-        onClick={() => onRead(book.pdf!)}
-      >
-        Read
+
+      <Info>
+        <Title>{book.title}</Title>
+        <Author>by {book.author}</Author>
+        {book.description && (
+          <Description>
+            {book.description.length > 120
+              ? `${book.description.slice(0, 120)}…`
+              : book.description}
+          </Description>
+        )}
+      </Info>
+
+      <StyledButton type="button" disabled={!book.pdf} onClick={handleRead}>
+        {book.pdf ? "Read" : "No PDF"}
       </StyledButton>
     </BookCardStyles>
   );

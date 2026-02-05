@@ -157,7 +157,10 @@ export const NavItem = styled(Link)`
 
   border-radius: 8px;
   margin: 0 0.7rem;
-  transition: background 0.25s ease, color 0.25s ease, transform 0.15s ease;
+  transition:
+    background 0.25s ease,
+    color 0.25s ease,
+    transform 0.15s ease;
 
   &:hover {
     background: ${(p) => p.theme.sidebarHover || "rgba(255,255,255,0.08)"};

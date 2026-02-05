@@ -8,6 +8,10 @@ import {
   PdfCard,
   PdfOverlay,
   CloseButton,
+  PdfToolbar,
+  PdfTitle,
+  ToolbarButton,
+  PdfFrameWrapper,
 } from "./Ebooks.styled";
 import axios from "axios";
 import BookCard from "./components/Ebook/BookCard";
@@ -25,60 +29,47 @@ type Book = {
   pdf?: string;
 };
 
-// type ResponeBookType = {
-//   _id: string;
-//   title: string;
-//   author: string;
-//   description: string;
-//   image: string;
-//   pdf?: string;
-// };
 const EBooks: React.FC = () => {
   const [submitted, setSubmitted] = useState<boolean>(false);
   const [filteredBooks, setFilteredBooks] = useState<Book[]>([]);
-  const [allBooks, setAllBooks] = useState<Book[]>([]); // Store the original books here
+  const [allBooks, setAllBooks] = useState<Book[]>([]);
   const inputRef = useRef<HTMLInputElement>(null);
   const [activePdf, setActivePdf] = useState<string | null>(null);
+  const [pdfName, setPdfName] = useState<string | null>(null);
+  const [zoom, setZoom] = useState(1);
 
-  // Pagination state
+  // Pagination
   const [currentPage, setCurrentPage] = useState<number>(1);
-  const booksPerPage = 10; // Number of books per page
+  const booksPerPage = 10;
 
   const handleSubmit = () => {
     setSubmitted(true);
     handleRead();
   };
 
-  // Fetch books from the backend
   useEffect(() => {
     const fetchBooks = async () => {
       const response = await axios.get(`${config.apiBaseURL}/books`);
-
       const backendBooks = response.data.data as Book[];
-
-      // Map backend data → frontend Book interface
-      const mappedBooks: Book[] = backendBooks.map((book) => ({
-        id: book.id,
+      const mappedBooks: Book[] = backendBooks.map((book, i) => ({
+        id: book.id ?? book.id ?? String(i),
         title: book.title,
         author: book.author,
         description: book.description,
         image: book.image,
         pdf: book.pdf,
       }));
-      setAllBooks(mappedBooks); // Save the original books
-      setFilteredBooks(mappedBooks); // Initially display all books
+      setAllBooks(mappedBooks);
+      setFilteredBooks(mappedBooks);
     };
     fetchBooks();
   }, []);
 
-  // Handle the search and filter
   const handleRead = () => {
     const value = inputRef.current?.value.toLowerCase() || "";
     if (value === "") {
-      // If the input is empty, reset the filtered books to the original list
       setFilteredBooks(allBooks);
     } else {
-      // Otherwise, filter the books by title or author
       const results = allBooks.filter(
         (book) =>
           book.title.toLowerCase().includes(value) ||
@@ -86,17 +77,14 @@ const EBooks: React.FC = () => {
       );
       setFilteredBooks(results);
     }
-    // Reset the page to 1 when the search changes
     setCurrentPage(1);
   };
 
-  // Calculate the current page books
   const currentBooks = filteredBooks.slice(
     (currentPage - 1) * booksPerPage,
     currentPage * booksPerPage,
   );
 
-  // Handle page change
   const handleNextPage = () => {
     if (currentPage < Math.ceil(filteredBooks.length / booksPerPage)) {
       setCurrentPage(currentPage + 1);
@@ -109,10 +97,56 @@ const EBooks: React.FC = () => {
     }
   };
 
+  // Open pdf in overlay (already used by BookCard)
+  const openPdf = async (pdf: string) => {
+    const url = pdf.startsWith("http")
+      ? pdf
+      : `${config.apiURL}/uploads/${pdf}`; // <-- use apiURL (no /api/v1)
+    try {
+      const res = await fetch(url, { credentials: "include" });
+      if (!res.ok) throw new Error("Failed to fetch PDF");
+      const blob = await res.blob();
+      const blobUrl = URL.createObjectURL(blob);
+      setActivePdf(blobUrl);
+      setPdfName(pdf);
+      setZoom(1);
+      // revoke when closed: URL.revokeObjectURL(blobUrl) in close handler
+    } catch (err) {
+      console.error("openPdf error", err);
+    }
+  };
+
+  // Download PDF via fetch + blob (avoids popup issues)
+  const downloadPdf = async () => {
+    if (!activePdf) return;
+
+    // if already a blob URL, just trigger download
+    if (activePdf.startsWith("blob:")) {
+      const a = document.createElement("a");
+      a.href = activePdf;
+      a.download = pdfName || "document.pdf";
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      return;
+    }
+
+    const res = await fetch(activePdf, { credentials: "include" });
+    if (!res.ok) throw new Error("Failed to fetch PDF");
+    const blob = await res.blob();
+    const blobUrl = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = blobUrl;
+    a.download = pdfName || "document.pdf";
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    URL.revokeObjectURL(blobUrl);
+  };
+
   return (
     <EBooksContainer $darkMode={false}>
       {!activePdf ? (
-        /* ================= LIBRARY VIEW ================= */
         <>
           <h1>E-Books Collection</h1>
           <StyledSearchContainer>
@@ -124,7 +158,6 @@ const EBooks: React.FC = () => {
                 if (e.key === "Enter") handleSubmit();
               }}
             />
-
             <StyledButton $darkMode={false} onClick={handleSubmit}>
               Search
             </StyledButton>
@@ -139,14 +172,11 @@ const EBooks: React.FC = () => {
               <BookCard
                 book={book}
                 key={book.id}
-                onRead={(pdf) =>
-                  setActivePdf(`${config.apiBaseURL}/uploads/${pdf}`)
-                }
+                onRead={(pdf) => openPdf(pdf)}
               />
             ))}
           </StyledBooksContainer>
 
-          {/* Pagination controls */}
           <div style={{ marginTop: "20px" }}>
             <StyledButton
               $darkMode={false}
@@ -171,20 +201,46 @@ const EBooks: React.FC = () => {
           </div>
         </>
       ) : (
-        /* ================= PDF VIEW ================= */
         <PdfOverlay onClick={() => setActivePdf(null)}>
           <PdfCard onClick={(e) => e.stopPropagation()}>
-            <CloseButton onClick={() => setActivePdf(null)}>✕</CloseButton>
+            <PdfToolbar>
+              <PdfTitle>{pdfName}</PdfTitle>
+              <ToolbarButton
+                onClick={() => setZoom((z) => Math.max(0.5, z - 0.25))}
+              >
+                −
+              </ToolbarButton>
+              <ToolbarButton
+                onClick={() => setZoom((z) => Math.min(3, z + 0.25))}
+              >
+                +
+              </ToolbarButton>
+              <ToolbarButton onClick={downloadPdf}>Download</ToolbarButton>
+              <CloseButton
+                onClick={() => {
+                  // when closing
+                  if (activePdf?.startsWith("blob:"))
+                    URL.revokeObjectURL(activePdf);
+                  setActivePdf(null);
+                }}
+              >
+                Close
+              </CloseButton>
+            </PdfToolbar>
 
-            <iframe
-              src={activePdf}
-              title="PDF Reader"
-              style={{
-                width: "100%",
-                height: "100%",
-                border: "none",
-              }}
-            />
+            <PdfFrameWrapper>
+              <iframe
+                src={activePdf}
+                title="PDF Reader"
+                style={{
+                  width: "100%",
+                  height: "100%",
+                  border: "none",
+                  transform: `scale(${zoom})`,
+                  transformOrigin: "top center",
+                }}
+              />
+            </PdfFrameWrapper>
           </PdfCard>
         </PdfOverlay>
       )}
