@@ -10,7 +10,7 @@ import {
 // import ThemeButtzon from "../components/ThemeButton";
 import { Avatar } from "@mui/material";
 
-import ThemeButton from "../components/ThemeButton";
+import ThemeButton from "../theme/ThemeButton";
 import AccountMenu from "./components/accountMenu";
 
 const Header: React.FC = () => {
