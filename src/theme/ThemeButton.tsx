@@ -1,4 +1,4 @@
-import { useThemeContext } from "../theme/useThemeContext";
+import { useThemeContext } from "./useThemeContext";
 import { ToggleButton } from "./ThemeButton.styled";
 
 export default function ThemeButton() {
