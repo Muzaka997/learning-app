@@ -18,7 +18,7 @@ export default function NavBar() {
             <MenuBookIcon />
           </NavItem>
 
-          <NavItem to="/">
+          <NavItem to="/home" end>
             <HomeIcon /> Home
           </NavItem>
 

@@ -21,10 +21,6 @@ const AccountMenu: React.FC<AccountMenuProps> = ({ close }) => {
     <MenuCard>
       <MenuItem onClick={() => navigate("/profile")}>Profile</MenuItem>
 
-      <MenuItem onClick={() => navigate("/settings")}>Settings</MenuItem>
-
-      <MenuItem onClick={() => navigate("/billing")}>Billing</MenuItem>
-
       <MenuItem onClick={handleLogout}>Logout</MenuItem>
     </MenuCard>
   );

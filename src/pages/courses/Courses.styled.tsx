@@ -4,12 +4,14 @@ export const StyledContainer = styled.div<{ $darkMode: boolean }>`
   display: flex;
   flex-direction: column;
   gap: 20px;
-  height: 200vh;
-  width: 100vh;
+  height: 120vh;
+  width: 160vh;
   padding-top: 24px;
   color: ${(p) => p.theme.text};
   background-color: ${(p) => p.theme.background};
-  transition: background-color 0.25s ease, color 0.25s ease;
+  transition:
+    background-color 0.25s ease,
+    color 0.25s ease;
 `;
 
 export const StyledCoursesContainer = styled.div`

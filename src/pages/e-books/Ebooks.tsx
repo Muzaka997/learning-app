@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
+import { useSearchParams, useNavigate, useLocation } from "react-router-dom";
 import {
   EBooksContainer,
   StyledBooksContainer,
@@ -29,6 +30,20 @@ type Book = {
   pdf?: string;
 };
 
+// Shape returned by backend (may use _id)
+type BackendBook = {
+  _id?: string;
+  id?: string;
+  title: string;
+  author: string;
+  description: string;
+  image: {
+    url: string;
+    publicId: string;
+  };
+  pdf?: string;
+};
+
 const EBooks: React.FC = () => {
   const [submitted, setSubmitted] = useState<boolean>(false);
   const [filteredBooks, setFilteredBooks] = useState<Book[]>([]);
@@ -37,6 +52,10 @@ const EBooks: React.FC = () => {
   const [activePdf, setActivePdf] = useState<string | null>(null);
   const [pdfName, setPdfName] = useState<string | null>(null);
   const [zoom, setZoom] = useState(1);
+  const [searchParams, setSearchParams] = useSearchParams();
+  const navigate = useNavigate();
+  const location = useLocation();
+  const isClosingRef = useRef(false);
 
   // Pagination
   const [currentPage, setCurrentPage] = useState<number>(1);
@@ -50,9 +69,9 @@ const EBooks: React.FC = () => {
   useEffect(() => {
     const fetchBooks = async () => {
       const response = await axios.get(`${config.apiBaseURL}/books`);
-      const backendBooks = response.data.data as Book[];
-      const mappedBooks: Book[] = backendBooks.map((book, i) => ({
-        id: book.id ?? book.id ?? String(i),
+      const backendBooks = response.data.data as BackendBook[];
+      const mappedBooks: Book[] = backendBooks.map((book: BackendBook, i) => ({
+        id: book._id ?? book.id ?? String(i),
         title: book.title,
         author: book.author,
         description: book.description,
@@ -98,7 +117,7 @@ const EBooks: React.FC = () => {
   };
 
   // Open pdf in overlay (already used by BookCard)
-  const openPdf = async (pdf: string) => {
+  const openPdf = async (pdf: string, id?: string) => {
     const url = pdf.startsWith("http")
       ? pdf
       : `${config.apiURL}/uploads/${pdf}`; // <-- use apiURL (no /api/v1)
@@ -110,10 +129,58 @@ const EBooks: React.FC = () => {
       setActivePdf(blobUrl);
       setPdfName(pdf);
       setZoom(1);
+      // reflect opened pdf in URL using navigate for reliability
+      if (id) {
+        const next = new URLSearchParams(location.search);
+        next.set("pdf", id);
+        const newUrl = `${location.pathname}?${next.toString()}`;
+        navigate(newUrl, { replace: false });
+        // also sync via setSearchParams to ensure router state updates everywhere
+        setSearchParams(next, { replace: false });
+      }
       // revoke when closed: URL.revokeObjectURL(blobUrl) in close handler
     } catch (err) {
       console.error("openPdf error", err);
     }
+  };
+
+  // If URL already has ?pdf=ID, open it after books load
+  useEffect(() => {
+    const idFromUrl = searchParams.get("pdf");
+    if (isClosingRef.current) return; // prevent immediate reopen after closing
+    if (!activePdf && idFromUrl && allBooks.length > 0) {
+      const match = allBooks.find((b) => b.id === idFromUrl);
+      if (match?.pdf) {
+        openPdf(match.pdf, match.id);
+      } else {
+        // invalid id -> clean param
+        const next = new URLSearchParams(searchParams);
+        next.delete("pdf");
+        setSearchParams(next, { replace: true });
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [allBooks, searchParams, activePdf]);
+
+  const closePdf = () => {
+    isClosingRef.current = true;
+    // Remove URL param first to prevent auto-reopen race
+    const next = new URLSearchParams(location.search);
+    next.delete("pdf");
+    const search = next.toString();
+    const newUrl = `${location.pathname}${search ? `?${search}` : ""}`;
+    navigate(newUrl, { replace: true });
+    // also update search params hook for consistency
+    setSearchParams(next, { replace: true });
+
+    if (activePdf?.startsWith("blob:")) URL.revokeObjectURL(activePdf);
+    setActivePdf(null);
+    setPdfName(null);
+
+    // allow re-open from URL again next tick
+    setTimeout(() => {
+      isClosingRef.current = false;
+    }, 0);
   };
 
   // Download PDF via fetch + blob (avoids popup issues)
@@ -172,7 +239,7 @@ const EBooks: React.FC = () => {
               <BookCard
                 book={book}
                 key={book.id}
-                onRead={(pdf) => openPdf(pdf)}
+                onRead={(pdf) => openPdf(pdf, book.id)}
               />
             ))}
           </StyledBooksContainer>
@@ -201,7 +268,7 @@ const EBooks: React.FC = () => {
           </div>
         </>
       ) : (
-        <PdfOverlay onClick={() => setActivePdf(null)}>
+        <PdfOverlay onClick={closePdf}>
           <PdfCard onClick={(e) => e.stopPropagation()}>
             <PdfToolbar>
               <PdfTitle>{pdfName}</PdfTitle>
@@ -216,16 +283,7 @@ const EBooks: React.FC = () => {
                 +
               </ToolbarButton>
               <ToolbarButton onClick={downloadPdf}>Download</ToolbarButton>
-              <CloseButton
-                onClick={() => {
-                  // when closing
-                  if (activePdf?.startsWith("blob:"))
-                    URL.revokeObjectURL(activePdf);
-                  setActivePdf(null);
-                }}
-              >
-                Close
-              </CloseButton>
+              <CloseButton onClick={closePdf}>Close</CloseButton>
             </PdfToolbar>
 
             <PdfFrameWrapper>

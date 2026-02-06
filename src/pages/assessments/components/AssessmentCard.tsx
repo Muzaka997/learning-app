@@ -1,7 +1,12 @@
 import React from "react";
 import type { Test } from "../Assessments";
 import { useNavigate } from "react-router-dom";
-import { AssessmentCardContainer } from "./AssessmentCard.styles";
+import {
+  AssessmentCardContainer,
+  Title,
+  Description,
+  PrimaryButton,
+} from "./AssessmentCard.styles";
 import { useAuth } from "../../auth/useAuth";
 
 interface Props {
@@ -22,18 +27,20 @@ const AssessmentCard: React.FC<Props> = ({ assessment }) => {
 
   return assessmentResult?.submitted ? (
     <AssessmentCardContainer>
-      <h3>{assessment.title}</h3>
-      <p>Course: {assessment.courseTitle}</p>
-      <p>Your Score: {assessmentResult?.score || 0}%</p>
+      <Title>{assessment.title}</Title>
+      <Description>Course: {assessment.courseTitle}</Description>
+      <Description>Your Score: {assessmentResult?.score || 0}%</Description>
     </AssessmentCardContainer>
   ) : (
     <AssessmentCardContainer>
-      <h3>{assessment.title}</h3>
-      <p>Course: {assessment.courseTitle}</p>
-      <p>Time Limit: {assessment.timeLimitMinutes} minutes</p>
-      <p>Passing Score: {assessment.passingScore}%</p>
+      <Title>{assessment.title}</Title>
+      <Description>Course: {assessment.courseTitle}</Description>
+      <Description>
+        Time Limit: {assessment.timeLimitMinutes} minutes
+      </Description>
+      <Description>Passing Score: {assessment.passingScore}%</Description>
 
-      <button onClick={handleSubmit}>Start Assessment</button>
+      <PrimaryButton onClick={handleSubmit}>Start Assessment</PrimaryButton>
     </AssessmentCardContainer>
   );
 };

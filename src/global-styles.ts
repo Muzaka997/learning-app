@@ -1,6 +1,6 @@
 import { createGlobalStyle } from "styled-components";
 import styled from "styled-components";
-import { Link } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 
 export const GlobalStyles = createGlobalStyle`
     *,
@@ -144,7 +144,7 @@ export const NavBarWrapper = styled.nav`
   box-sizing: border-box;
 `;
 
-export const NavItem = styled(Link)`
+export const NavItem = styled(NavLink)`
   padding: 0.9rem 1rem;
   font-size: 1.1rem;
   font-weight: 500;
@@ -163,8 +163,7 @@ export const NavItem = styled(Link)`
     transform 0.15s ease;
 
   &:hover {
-    background: ${(p) => p.theme.sidebarHover || "rgba(255,255,255,0.08)"};
-    color: ${(p) => p.theme.text};
+    color: inherit;
     transform: translateX(4px);
   }
 
