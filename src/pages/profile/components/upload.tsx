@@ -1,18 +1,53 @@
 import { useState, type ChangeEvent, type FormEvent } from "react";
 import { useAuth } from "../../auth/useAuth";
 import config from "../../../config";
+import {
+  UploadForm,
+  FileRow,
+  HiddenFileInput,
+  FileButton,
+  FileName,
+  SubmitButton,
+  ClearButton,
+  Preview,
+  PreviewImage,
+} from "./Upload.styled";
+import { useEffect, useRef } from "react";
 
 const UploadPhoto: React.FC = () => {
   const { user, setUser } = useAuth();
   const [file, setFile] = useState<File | null>(null);
   const [imageUrl, setImageUrl] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  // cleanup object URL on unmount
+  useEffect(() => {
+    return () => {
+      if (imageUrl && imageUrl.startsWith("blob:")) {
+        URL.revokeObjectURL(imageUrl);
+      }
+    };
+  }, [imageUrl]);
 
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
     if (e.target.files?.[0]) {
+      // revoke previous preview if it was a blob
+      if (imageUrl && imageUrl.startsWith("blob:")) {
+        URL.revokeObjectURL(imageUrl);
+      }
       setFile(e.target.files[0]);
       setImageUrl(URL.createObjectURL(e.target.files[0])); // preview
     }
+  };
+
+  const handleClear = () => {
+    if (imageUrl && imageUrl.startsWith("blob:")) {
+      URL.revokeObjectURL(imageUrl);
+    }
+    setFile(null);
+    setImageUrl(null);
+    if (inputRef.current) inputRef.current.value = "";
   };
 
   const handleSubmit = async (e: FormEvent) => {
@@ -26,10 +61,12 @@ const UploadPhoto: React.FC = () => {
     formData.append("photo", file);
 
     try {
+      const token = localStorage.getItem("token");
       const res = await fetch(`${config.apiBaseURL}/users/${user._id}/photo`, {
         method: "PUT",
         body: formData,
-        credentials: "include", // if using cookie JWT
+        credentials: "include", // send cookie if present
+        headers: token ? { Authorization: `Bearer ${token}` } : undefined,
       });
 
       const data: { success: boolean; imageUrl?: string; error?: string } =
@@ -38,10 +75,11 @@ const UploadPhoto: React.FC = () => {
       if (!res.ok || !data.success)
         throw new Error(data.error || "Upload failed");
 
-      setImageUrl(`${config.apiBaseURL}${data.imageUrl}`);
+      // Server returns a full secure_url from Cloudinary
+      setImageUrl(null);
 
       if (user) {
-        setUser({ ...user, profilePhoto: data.imageUrl });
+        setUser({ ...user, profilePhoto: data.imageUrl || undefined });
       }
 
       alert("Photo uploaded successfully!");
@@ -54,22 +92,33 @@ const UploadPhoto: React.FC = () => {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <input type="file" accept="image/*" onChange={handleFileChange} />
-      <button type="submit" disabled={loading}>
-        {loading ? "Uploading..." : "Upload"}
-      </button>
+    <UploadForm onSubmit={handleSubmit}>
+      <FileRow>
+        <HiddenFileInput
+          id="profile-photo"
+          type="file"
+          accept="image/*"
+          onChange={handleFileChange}
+          ref={inputRef}
+        />
+        <FileButton htmlFor="profile-photo">Choose photo</FileButton>
+        {file && <FileName>{file.name}</FileName>}
+        {file && (
+          <ClearButton type="button" onClick={handleClear}>
+            Remove
+          </ClearButton>
+        )}
+        <SubmitButton type="submit" disabled={loading || !file}>
+          {loading ? "Uploading..." : "Upload"}
+        </SubmitButton>
+      </FileRow>
 
       {imageUrl && (
-        <div style={{ marginTop: "1rem" }}>
-          <img
-            src={imageUrl}
-            alt="Uploaded"
-            style={{ width: "200px", borderRadius: "8px" }}
-          />
-        </div>
+        <Preview>
+          <PreviewImage src={imageUrl} alt="Uploaded preview" />
+        </Preview>
       )}
-    </form>
+    </UploadForm>
   );
 };
 
