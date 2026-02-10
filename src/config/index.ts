@@ -16,14 +16,33 @@ interface IEnvironmentConfig {
 let config: IEnvironmentConfig;
 
 // Allow overriding via Vite env vars set in Vercel project settings
-const envApiBase = import.meta.env.VITE_API_BASE_URL as string | undefined;
-const envApiUrl = import.meta.env.VITE_API_URL as string | undefined;
+const stripTrailingSlash = (u?: string) =>
+  (u || "").replace(/\s+/g, "").replace(/\/$/, "");
+
+const envApiBase = stripTrailingSlash(
+  (import.meta.env.VITE_API_BASE_URL as string | undefined) || undefined,
+);
+const envApiUrl = stripTrailingSlash(
+  (import.meta.env.VITE_API_URL as string | undefined) || undefined,
+);
+
+// Derive missing counterpart if only one is supplied
+const deriveFromApiURL = (url?: string) =>
+  url ? stripTrailingSlash(url) + "/api/v1" : undefined;
+const deriveFromApiBase = (base?: string) =>
+  base ? stripTrailingSlash(base.replace(/\/?api\/v1$/, "")) : undefined;
+
+const resolvedEnvApiUrl = envApiUrl || deriveFromApiBase(envApiBase);
+const resolvedEnvApiBase = envApiBase || deriveFromApiURL(envApiUrl);
 
 const prodApiBaseUrl =
-  envApiBase || "https://devcamper-api-i20h.onrender.com/api/v1";
-const prodApiUrl = envApiUrl || "https://devcamper-api-i20h.onrender.com";
-const localApiBaseURL = "http://localhost:5001/api/v1";
-const localApiURL = "http://localhost:5001";
+  stripTrailingSlash(resolvedEnvApiBase) ||
+  "https://devcamper-api-i20h.onrender.com/api/v1";
+const prodApiUrl =
+  stripTrailingSlash(resolvedEnvApiUrl) ||
+  "https://devcamper-api-i20h.onrender.com";
+const localApiBaseURL = stripTrailingSlash("http://localhost:5001/api/v1");
+const localApiURL = stripTrailingSlash("http://localhost:5001");
 
 switch (import.meta.env.MODE) {
   case EnvironmentModeEnum.Production:
