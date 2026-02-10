@@ -28,7 +28,8 @@ export default function Register() {
   const [passwordError, setPasswordError] = useState(""); // State to handle error message
   const [showPassword, setShowPassword] = useState(false);
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (e?: React.FormEvent) => {
+    e?.preventDefault();
     if (password !== repeatPassword) {
       setPasswordError("Passwords do not match");
       return;
@@ -37,7 +38,7 @@ export default function Register() {
     setPasswordError(""); // Reset error if passwords match
 
     await register(name, email, password);
-    navigate("/");
+    navigate("/check-email");
   };
 
   const goPrevPage = () => {
@@ -116,7 +117,7 @@ export default function Register() {
             variant="contained"
             fullWidth
             sx={{ mt: 2 }}
-            onClick={handleSubmit}
+            onClick={() => handleSubmit()}
           >
             Register
           </Button>

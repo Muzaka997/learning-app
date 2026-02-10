@@ -12,6 +12,8 @@ import Layout from "./components/Layout/Layout";
 
 import Register from "./pages/auth/components /Register";
 import Login from "./pages/auth/components /Login";
+import CheckEmail from "./pages/auth/components /CheckEmail";
+import VerifyEmail from "./pages/auth/components /VerifyEmail";
 
 import { AuthProvider } from "./pages/auth/authContext";
 import CoursePage from "./pages/courses/components/CourseCard/CoursePage";
@@ -19,6 +21,7 @@ import IndexRoute from "./navigation/indexRoute";
 
 import Profile from "./pages/profile/profile";
 import TestPage from "./pages/assessments/components/AssessmentPage";
+import PrivateRoute from "./pages/auth/privateRoute";
 
 export default function App() {
   return (
@@ -28,12 +31,22 @@ export default function App() {
       <BrowserRouter>
         <AuthProvider>
           <Routes>
+            {/* Auth routes (no layout) */}
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
-            {/* 🌍 Public layout routes */}
-            <Route path="/" element={<Layout />}>
-              <Route index element={<IndexRoute />} />
+            <Route path="/check-email" element={<CheckEmail />} />
+            <Route path="/verify-email" element={<VerifyEmail />} />
 
+            {/* All app routes are protected */}
+            <Route
+              path="/"
+              element={
+                <PrivateRoute>
+                  <Layout />
+                </PrivateRoute>
+              }
+            >
+              <Route index element={<IndexRoute />} />
               <Route path="home" element={<MainPage />} />
               <Route path="courses" element={<CoursesPage />} />
               <Route path="assessments" element={<Assessments />} />
@@ -44,7 +57,15 @@ export default function App() {
               <Route path="tests/:id" element={<TestPage />} />
             </Route>
 
-            {/* 🔓 Auth routes (NO Layout / NavBar) */}
+            {/* Fallback */}
+            <Route
+              path="*"
+              element={
+                <PrivateRoute>
+                  <Layout />
+                </PrivateRoute>
+              }
+            />
           </Routes>
         </AuthProvider>
       </BrowserRouter>
