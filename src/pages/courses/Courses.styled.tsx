@@ -6,7 +6,7 @@ export const StyledContainer = styled.div<{ $darkMode: boolean }>`
   gap: 20px;
   height: 120vh;
   width: 160vh;
-  padding-top: 24px;
+  padding: 24px;
   color: ${(p) => p.theme.text};
   background-color: ${(p) => p.theme.background};
   transition:
