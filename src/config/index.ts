@@ -15,8 +15,13 @@ interface IEnvironmentConfig {
 // ...existing code...
 let config: IEnvironmentConfig;
 
-const prodApiBaseUrl = "https://devcamper-api-i20h.onrender.com/api/v1";
-const prodApiUrl = "https://devcamper-api-i20h.onrender.com";
+// Allow overriding via Vite env vars set in Vercel project settings
+const envApiBase = import.meta.env.VITE_API_BASE_URL as string | undefined;
+const envApiUrl = import.meta.env.VITE_API_URL as string | undefined;
+
+const prodApiBaseUrl =
+  envApiBase || "https://devcamper-api-i20h.onrender.com/api/v1";
+const prodApiUrl = envApiUrl || "https://devcamper-api-i20h.onrender.com";
 const localApiBaseURL = "http://localhost:5001/api/v1";
 const localApiURL = "http://localhost:5001";
 
