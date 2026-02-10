@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { sendContactMessage } from "./contactApi";
+import { useAuth } from "../auth/useAuth";
 import {
   Container,
   Title,
@@ -15,16 +16,16 @@ import {
 // Type for form data
 type FormData = {
   name: string;
-  email: string;
   message: string;
 };
 
 const ContactUs: React.FC = () => {
   const [formData, setFormData] = useState<FormData>({
     name: "",
-    email: "",
     message: "",
   });
+
+  const { user, loading } = useAuth();
 
   const [submitted, setSubmitted] = useState(false);
 
@@ -40,9 +41,16 @@ const ContactUs: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      await sendContactMessage(formData);
+      if (!user) {
+        alert("Please log in to send a message.");
+        return;
+      }
+      await sendContactMessage({
+        name: formData.name,
+        message: formData.message,
+      });
       setSubmitted(true);
-      setFormData({ name: "", email: "", message: "" });
+      setFormData({ name: "", message: "" });
     } catch (err) {
       console.error("Failed to send message", err);
       alert("Failed to send message. Please try again.");
@@ -53,6 +61,12 @@ const ContactUs: React.FC = () => {
     <Container>
       <Title>Contact Us</Title>
       {submitted && <Success>Thank you! Your message has been sent.</Success>}
+      {!loading && !user && (
+        <p style={{ marginBottom: 16 }}>
+          Please log in to send us a message. Your message will be sent from
+          your registered email address.
+        </p>
+      )}
       <Form onSubmit={handleSubmit}>
         <Field>
           <Label htmlFor="name">Name</Label>
@@ -66,18 +80,12 @@ const ContactUs: React.FC = () => {
             placeholder="Your full name"
           />
         </Field>
-        <Field>
-          <Label htmlFor="email">Email</Label>
-          <Input
-            id="email"
-            type="email"
-            name="email"
-            value={formData.email}
-            onChange={handleChange}
-            required
-            placeholder="you@example.com"
-          />
-        </Field>
+        {user && (
+          <Field>
+            <Label>Email</Label>
+            <Input value={user.email} disabled readOnly />
+          </Field>
+        )}
         <Field>
           <Label htmlFor="message">Message</Label>
           <TextArea
@@ -90,7 +98,9 @@ const ContactUs: React.FC = () => {
             placeholder="How can we help?"
           />
         </Field>
-        <Submit type="submit">Send Message</Submit>
+        <Submit type="submit" disabled={!user || loading}>
+          Send Message
+        </Submit>
       </Form>
     </Container>
   );
