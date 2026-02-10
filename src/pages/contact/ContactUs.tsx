@@ -1,5 +1,16 @@
-// src/ContactUs.tsx
 import React, { useState } from "react";
+import { sendContactMessage } from "./contactApi";
+import {
+  Container,
+  Title,
+  Form,
+  Field,
+  Label,
+  Input,
+  TextArea,
+  Submit,
+  Success,
+} from "./ContactUs.styled";
 
 // Type for form data
 type FormData = {
@@ -18,7 +29,7 @@ const ContactUs: React.FC = () => {
   const [submitted, setSubmitted] = useState(false);
 
   const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
     setFormData({
       ...formData,
@@ -26,58 +37,62 @@ const ContactUs: React.FC = () => {
     });
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Form submitted:", formData);
-    setSubmitted(true);
-    setFormData({ name: "", email: "", message: "" });
+    try {
+      await sendContactMessage(formData);
+      setSubmitted(true);
+      setFormData({ name: "", email: "", message: "" });
+    } catch (err) {
+      console.error("Failed to send message", err);
+      alert("Failed to send message. Please try again.");
+    }
   };
 
   return (
-    <div style={{ maxWidth: "500px", margin: "0 auto", padding: "20px" }}>
-      <h1>Contact Us</h1>
-      {submitted && (
-        <p style={{ color: "green" }}>Thank you! Your message has been sent.</p>
-      )}
-      <form onSubmit={handleSubmit}>
-        <div style={{ marginBottom: "10px" }}>
-          <label>Name:</label>
-          <input
+    <Container>
+      <Title>Contact Us</Title>
+      {submitted && <Success>Thank you! Your message has been sent.</Success>}
+      <Form onSubmit={handleSubmit}>
+        <Field>
+          <Label htmlFor="name">Name</Label>
+          <Input
+            id="name"
             type="text"
             name="name"
             value={formData.name}
             onChange={handleChange}
             required
-            style={{ width: "100%", padding: "8px", marginTop: "5px" }}
+            placeholder="Your full name"
           />
-        </div>
-        <div style={{ marginBottom: "10px" }}>
-          <label>Email:</label>
-          <input
+        </Field>
+        <Field>
+          <Label htmlFor="email">Email</Label>
+          <Input
+            id="email"
             type="email"
             name="email"
             value={formData.email}
             onChange={handleChange}
             required
-            style={{ width: "100%", padding: "8px", marginTop: "5px" }}
+            placeholder="you@example.com"
           />
-        </div>
-        <div style={{ marginBottom: "10px" }}>
-          <label>Message:</label>
-          <textarea
+        </Field>
+        <Field>
+          <Label htmlFor="message">Message</Label>
+          <TextArea
+            id="message"
             name="message"
             value={formData.message}
             onChange={handleChange}
             required
             rows={5}
-            style={{ width: "100%", padding: "8px", marginTop: "5px" }}
+            placeholder="How can we help?"
           />
-        </div>
-        <button type="submit" style={{ padding: "10px 20px" }}>
-          Send Message
-        </button>
-      </form>
-    </div>
+        </Field>
+        <Submit type="submit">Send Message</Submit>
+      </Form>
+    </Container>
   );
 };
 

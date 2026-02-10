@@ -4,7 +4,11 @@ export const StyledBox = styled.div`
   width: 350px;
   max-width: 90%;
   padding: 35px 30px;
-  background-color: #fff;
+  color: ${(p) => p.theme.text};
+  background-color: ${(p) => p.theme.background};
+  transition:
+    background-color 0.25s ease,
+    color 0.25s ease;
   border-radius: 12px;
   box-shadow: 0 8px 20px rgba(0.3, 0.3, 0.3, 0.3);
   display: flex;
@@ -41,7 +45,9 @@ export const StyledInput = styled.input`
   border: 1px solid #ccc;
   border-radius: 6px;
   outline: none;
-  transition: border-color 0.2s, box-shadow 0.2s;
+  transition:
+    border-color 0.2s,
+    box-shadow 0.2s;
 
   &:focus {
     border-color: #0077ff;
