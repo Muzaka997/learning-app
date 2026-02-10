@@ -55,7 +55,7 @@ export const StyledTextField = styled.input<{ $darkMode: boolean }>`
   padding: 8px 12px;
   font-size: 14px;
   color: ${(p) => p.theme.text};
-
+  background-color: ${(p) => p.theme.background};
   transition:
     background-color 0.25s ease,
     color 0.25s ease;
