@@ -123,3 +123,72 @@ export const HomeworkBlock = styled.div`
     font-size: 0.95rem;
   }
 `;
+
+export const EssayWrap = styled.div`
+  margin-top: 10px;
+  padding: 12px 14px;
+  border-radius: 10px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+`;
+
+export const EssayLabel = styled.label`
+  display: block;
+  font-weight: 600;
+  font-size: 0.95rem;
+  margin-bottom: 8px;
+  color: #334155;
+`;
+
+export const EssayArea = styled.textarea`
+  width: 100%;
+  min-height: 140px;
+  resize: vertical;
+  padding: 12px 14px;
+  border-radius: 8px;
+  border: 1px solid #cbd5e1;
+  background: #ffffff;
+  color: ${(p) => p.theme.text};
+  outline: none;
+  font-size: 0.95rem;
+  line-height: 1.5;
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+
+  &:focus {
+    border-color: #60a5fa;
+    box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.25);
+  }
+`;
+
+export const EssayActions = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 10px;
+`;
+
+export const EssayButton = styled.button`
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: 1px solid transparent;
+  font-weight: 600;
+  background: linear-gradient(90deg, #4f46e5, #18a6ff);
+  color: #fff;
+  box-shadow: 0 8px 20px rgba(24, 166, 255, 0.18);
+  transition:
+    transform 120ms ease,
+    opacity 120ms ease;
+
+  &:hover {
+    transform: translateY(-1px);
+    opacity: 0.98;
+  }
+`;
+
+export const SaveNote = styled.span`
+  font-size: 0.85rem;
+  color: #059669;
+  opacity: 0.9;
+`;

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 import type { Course } from "./CourseCard";
@@ -16,6 +16,14 @@ import {
   WeekTitle,
 } from "./StyledCoursePage";
 import config from "../../../../config";
+import {
+  EssayArea,
+  EssayLabel,
+  EssayWrap,
+  EssayActions,
+  EssayButton,
+  SaveNote,
+} from "./StyledCoursePage";
 
 const getYouTubeId = (url?: string) => {
   if (!url) return null;
@@ -30,6 +38,31 @@ const CoursePage = () => {
   console.log("Course ID from URL:", id);
 
   const [course, setCourse] = useState<Course | null>(null);
+  const storageKey = useMemo(
+    () => (id ? `course_essays_${id}` : undefined),
+    [id],
+  );
+  const [essays, setEssays] = useState<Record<string, string>>(() => {
+    if (typeof window === "undefined") return {};
+    try {
+      if (!storageKey) return {};
+      const raw = localStorage.getItem(storageKey);
+      return raw ? (JSON.parse(raw) as Record<string, string>) : {};
+    } catch {
+      return {};
+    }
+  });
+  const [saved, setSaved] = useState<Record<string, boolean>>({});
+
+  useEffect(() => {
+    if (!storageKey) return;
+    try {
+      localStorage.setItem(storageKey, JSON.stringify(essays));
+    } catch (e) {
+      // ignore storage errors (quota/disabled)
+      console.warn("Failed to save essay to localStorage", e);
+    }
+  }, [essays, storageKey]);
 
   useEffect(() => {
     const fetchCourse = async () => {
@@ -76,10 +109,59 @@ const CoursePage = () => {
                 }
 
                 if (item.type === "homework") {
+                  const essayKey = `wk${week.week}-hw${index}`;
                   return (
                     <HomeworkBlock key={index}>
                       <h4>📝 Homework</h4>
                       <p>{item.description}</p>
+
+                      <EssayWrap>
+                        <EssayLabel htmlFor={`essay-${essayKey}`}>
+                          Your Essay / Notes
+                        </EssayLabel>
+                        <EssayArea
+                          id={`essay-${essayKey}`}
+                          placeholder="Write your homework here..."
+                          value={essays[essayKey] || ""}
+                          onChange={(e) =>
+                            setEssays((prev) => ({
+                              ...prev,
+                              [essayKey]: e.target.value,
+                            }))
+                          }
+                        />
+                        <EssayActions>
+                          <EssayButton
+                            type="button"
+                            onClick={() => {
+                              if (!storageKey) return;
+                              try {
+                                localStorage.setItem(
+                                  storageKey,
+                                  JSON.stringify(essays),
+                                );
+                                setSaved((s) => ({ ...s, [essayKey]: true }));
+                                setTimeout(
+                                  () =>
+                                    setSaved((s) => ({
+                                      ...s,
+                                      [essayKey]: false,
+                                    })),
+                                  1500,
+                                );
+                              } catch (e) {
+                                console.warn(
+                                  "Failed to save essay to localStorage",
+                                  e,
+                                );
+                              }
+                            }}
+                          >
+                            Save Essay
+                          </EssayButton>
+                          {saved[essayKey] && <SaveNote>Saved!</SaveNote>}
+                        </EssayActions>
+                      </EssayWrap>
                     </HomeworkBlock>
                   );
                 }
