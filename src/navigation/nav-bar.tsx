@@ -1,42 +1,42 @@
-import { NavBarWrapper, NavItem } from "../global-styles";
 import { useAuth } from "../pages/auth/useAuth";
+import { Sidebar, NavList, Item, Brand, Spacer, Label } from "./NavBar.styled";
 import HomeIcon from "@mui/icons-material/Home";
 import SchoolIcon from "@mui/icons-material/School";
 import AssignmentIcon from "@mui/icons-material/Assignment";
 import MenuBookIcon from "@mui/icons-material/MenuBook";
 import EmailIcon from "@mui/icons-material/Email";
+import AutoStoriesIcon from "@mui/icons-material/AutoStories";
 
 export default function NavBar() {
   const { user } = useAuth();
 
   return (
-    <NavBarWrapper>
-      {/* 🔐 Auth section */}
+    <Sidebar>
       {user && (
         <>
-          <NavItem to="/">
-            <MenuBookIcon />
-          </NavItem>
-
-          <NavItem to="/home" end>
-            <HomeIcon /> Home
-          </NavItem>
-
-          <NavItem to="/courses">
-            <SchoolIcon /> Courses
-          </NavItem>
-
-          <NavItem to="/assessments">
-            <AssignmentIcon /> Assessments
-          </NavItem>
-          <NavItem to="/e-books">
-            <MenuBookIcon /> E-Books
-          </NavItem>
-          <NavItem to="/contactus">
-            <EmailIcon /> Contact Us
-          </NavItem>
+          <Brand>
+            <AutoStoriesIcon /> Learning App
+          </Brand>
+          <NavList>
+            <Item to="/home" end>
+              <HomeIcon /> <Label>Home</Label>
+            </Item>
+            <Item to="/courses">
+              <SchoolIcon /> <Label>Courses</Label>
+            </Item>
+            <Item to="/assessments">
+              <AssignmentIcon /> <Label>Assessments</Label>
+            </Item>
+            <Item to="/e-books">
+              <MenuBookIcon /> <Label>E-Books</Label>
+            </Item>
+            <Item to="/contactus">
+              <EmailIcon /> <Label>Contact Us</Label>
+            </Item>
+          </NavList>
+          <Spacer />
         </>
       )}
-    </NavBarWrapper>
+    </Sidebar>
   );
 }
