@@ -12,8 +12,7 @@ import Layout from "./components/Layout/Layout";
 
 import Register from "./pages/auth/components /Register";
 import Login from "./pages/auth/components /Login";
-import CheckEmail from "./pages/auth/components /CheckEmail";
-import VerifyEmail from "./pages/auth/components /VerifyEmail";
+// Email verification removed
 
 import { AuthProvider } from "./pages/auth/authContext";
 import CoursePage from "./pages/courses/components/CourseCard/CoursePage";
@@ -34,8 +33,7 @@ export default function App() {
             {/* Auth routes (no layout) */}
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
-            <Route path="/check-email" element={<CheckEmail />} />
-            <Route path="/verify-email" element={<VerifyEmail />} />
+            {/* No email verification routes */}
 
             {/* All app routes are protected */}
             <Route

@@ -44,9 +44,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   };
 
   const register = async (name: string, email: string, password: string) => {
-    // Register now sends a verification email and does NOT return a token
-    await authApi.post("/auth/register", { name, email, password });
-    // Do not auto-login; user must verify email first
+    const res = await authApi.post("/auth/register", { name, email, password });
+    const token = res.data.token;
+    if (token) {
+      localStorage.setItem("token", token);
+      setAuthToken(token);
+    }
+
+    await fetchCurrentUser();
   };
 
   const logout = async () => {

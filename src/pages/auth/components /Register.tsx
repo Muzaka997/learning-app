@@ -38,7 +38,7 @@ export default function Register() {
     setPasswordError(""); // Reset error if passwords match
 
     await register(name, email, password);
-    navigate("/check-email");
+    navigate("/");
   };
 
   const goPrevPage = () => {
