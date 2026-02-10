@@ -18,6 +18,7 @@ contactApi.interceptors.request.use((req) => {
 
 export const sendContactMessage = async (data: {
   name: string;
+  email: string;
   message: string;
 }) => {
   return contactApi.post("/contact", data);
