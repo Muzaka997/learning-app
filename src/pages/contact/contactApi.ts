@@ -1,17 +1,11 @@
-import axios from "axios";
-import config from "../../config";
+import authApi from "../auth/authApi";
 
-const contactApi = axios.create({ baseURL: config.apiBaseURL });
-
-// This endpoint is public; do NOT send cookies or auth headers to avoid CORS credential requirements
-// If you later secure it, prefer using the existing authApi instead of modifying this client
-
+// Contact endpoint now requires auth and uses the account's registered email
 export const sendContactMessage = async (data: {
   name: string;
-  email: string;
   message: string;
 }) => {
-  return contactApi.post("/contact", data);
+  return authApi.post("/contact", data);
 };
 
-export default contactApi;
+export default sendContactMessage;

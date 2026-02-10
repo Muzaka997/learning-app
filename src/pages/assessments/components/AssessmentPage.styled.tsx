@@ -43,9 +43,9 @@ export const Options = styled.div`
 `;
 
 export const StyledOption = styled.label<{
-  selected: boolean;
-  correct?: boolean;
-  wrong?: boolean;
+  $selected: boolean;
+  $correct?: boolean;
+  $wrong?: boolean;
 }>`
   display: flex;
   align-items: center;
@@ -54,7 +54,7 @@ export const StyledOption = styled.label<{
   border-radius: 8px;
   cursor: pointer;
   border: 2px solid
-    ${({ correct, wrong, selected }) =>
+    ${({ $correct: correct, $wrong: wrong, $selected: selected }) =>
       correct
         ? "#16a34a"
         : wrong
@@ -63,18 +63,18 @@ export const StyledOption = styled.label<{
             ? "#4f46e5"
             : "#e5e7eb"};
 
-  background: ${({ correct, wrong, selected }) =>
+  background: ${({ $correct: correct, $wrong: wrong, $selected: selected }) =>
     correct ? "#dcfce7" : wrong ? "#fee2e2" : selected ? "#eef2ff" : "#ffffff"};
 
   transition: 0.2s ease;
 
   &:hover {
-    border-color: ${({ correct, wrong }) =>
+    border-color: ${({ $correct: correct, $wrong: wrong }) =>
       correct ? "#16a34a" : wrong ? "#dc2626" : "#4f46e5"};
   }
 
   input {
-    accent-color: ${({ correct, wrong }) =>
+    accent-color: ${({ $correct: correct, $wrong: wrong }) =>
       correct ? "#16a34a" : wrong ? "#dc2626" : "#4f46e5"};
     width: 18px;
     height: 18px;
