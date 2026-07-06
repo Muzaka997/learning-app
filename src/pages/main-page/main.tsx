@@ -8,6 +8,7 @@ import {
   BooksCarousel,
   CarouselWrapper,
   CarouselButton,
+  Eyebrow,
 } from "./Main.styles";
 import config from "../../config";
 import { useEffect, useRef, useState } from "react";
@@ -74,6 +75,7 @@ const MainPage: React.FC = () => {
 
   return (
     <StyledAppWrapper>
+      <Eyebrow>Welcome back</Eyebrow>
       <h1>My Learning App</h1>
       <StyledContainer>
         <p>

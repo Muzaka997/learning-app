@@ -12,6 +12,8 @@ import {
   PdfTitle,
   ToolbarButton,
   PdfFrameWrapper,
+  Pagination,
+  PageButton,
 } from "./Ebooks.styled";
 import BookCard from "./components/Ebook/BookCard";
 import { useEbooksData } from "./hooks/useEbooksData";
@@ -75,25 +77,19 @@ const EBooks: React.FC = () => {
             ))}
           </StyledBooksContainer>
 
-          <div style={{ marginTop: "20px" }}>
-            <StyledButton
-              $darkMode={false}
-              onClick={handlePreviousPage}
-              disabled={!canPrev}
-            >
-              Previous
-            </StyledButton>
-            <span style={{ margin: "0 10px" }}>
-              Page {currentPage} of {totalPages}
-            </span>
-            <StyledButton
-              $darkMode={false}
-              onClick={handleNextPage}
-              disabled={!canNext}
-            >
-              Next
-            </StyledButton>
-          </div>
+          {totalPages > 1 && (
+            <Pagination>
+              <PageButton onClick={handlePreviousPage} disabled={!canPrev}>
+                ‹
+              </PageButton>
+              <span>
+                Page {currentPage} of {totalPages}
+              </span>
+              <PageButton onClick={handleNextPage} disabled={!canNext}>
+                ›
+              </PageButton>
+            </Pagination>
+          )}
         </>
       ) : (
         <PdfOverlay onClick={closePdf}>
