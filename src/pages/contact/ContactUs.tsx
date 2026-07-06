@@ -4,6 +4,8 @@ import { useAuth } from "../auth/useAuth";
 import {
   Container,
   Title,
+  Subtitle,
+  Card,
   Form,
   Field,
   Label,
@@ -65,14 +67,18 @@ const ContactUs: React.FC = () => {
   return (
     <Container>
       <Title>Contact Us</Title>
+      <Subtitle>
+        Questions about a course or a reading? Send us a note.
+      </Subtitle>
       {submitted && <Success>Thank you! Your message has been sent.</Success>}
       {!loading && !user && (
-        <p style={{ marginBottom: 16 }}>
+        <p style={{ marginBottom: 16, color: "inherit" }}>
           Please log in to send us a message. Your message will be sent from
           your registered email address.
         </p>
       )}
-      <Form onSubmit={handleSubmit}>
+      <Card>
+        <Form onSubmit={handleSubmit}>
         <Field>
           <Label htmlFor="name">Name</Label>
           <Input
@@ -103,10 +109,11 @@ const ContactUs: React.FC = () => {
             placeholder="How can we help?"
           />
         </Field>
-        <Submit type="submit" disabled={!user || loading}>
-          Send Message
-        </Submit>
-      </Form>
+          <Submit type="submit" disabled={!user || loading}>
+            Send Message
+          </Submit>
+        </Form>
+      </Card>
     </Container>
   );
 };

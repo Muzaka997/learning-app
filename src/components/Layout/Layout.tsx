@@ -1,5 +1,8 @@
-import { StyledOutletContainer, StyledWrapper } from "./Layout.styled";
-import NavBar from "../../navigation/nav-bar";
+import {
+  StyledContent,
+  StyledOutletContainer,
+  StyledWrapper,
+} from "./Layout.styled";
 import { Outlet } from "react-router-dom";
 import Header from "../../navigation/header";
 
@@ -8,10 +11,11 @@ const Layout = () => {
     <>
       <Header />
       <StyledWrapper>
-        <NavBar />
-        <StyledOutletContainer>
-          <Outlet />
-        </StyledOutletContainer>
+        <StyledContent>
+          <StyledOutletContainer>
+            <Outlet />
+          </StyledOutletContainer>
+        </StyledContent>
       </StyledWrapper>
     </>
   );

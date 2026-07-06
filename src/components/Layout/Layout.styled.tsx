@@ -8,15 +8,23 @@ export const StyledWrapper = styled.div`
     color 0.25s ease;
 
   display: flex;
-  gap: 12px;
-  padding-left: 250px;
-  /* padding-top: 70px; */
-  height: 100vh;
-  width: 100vw;
+  flex-direction: column;
+  width: 100%;
+  min-height: calc(100vh - 71px);
+`;
+
+export const StyledContent = styled.div`
+  width: 100%;
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 60px 40px 90px;
+  box-sizing: border-box;
+
+  @media (max-width: 640px) {
+    padding: 36px 20px 64px;
+  }
 `;
 
 export const StyledOutletContainer = styled.div`
-  max-width: calc(100vw - 250px);
   width: 100%;
-  overflow-y: auto;
 `;

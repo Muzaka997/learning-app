@@ -1,24 +1,20 @@
 import styled from "styled-components";
 
 export const ToggleButton = styled.button`
-  /* position: fixed;
-  top: 20px;
-  right: 20px; */
-
-  /* padding: 0.6rem 1.2rem;
-  font-size: 1rem;
-  font-weight: 500; */
-
-  /* background: ${(p) => p.theme.sidebarBackground || "#222"};
-  color: ${(p) => p.theme.sidebarText || "white"};
-
-  border: 1px solid transparent;
-  border-radius: 8px;
-
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 34px;
+  border: 1px solid ${(p) => p.theme.inputBorder};
+  border-radius: 10px;
+  background: ${(p) => p.theme.hoverFill};
+  color: ${(p) => p.theme.navText};
+  font-size: 15px;
+  line-height: 1;
   cursor: pointer;
-  transition: 0.25s;
+  transition: background 0.16s ease;
 
   &:hover {
-    background: ${(p) => p.theme.sidebarHover || "#444"};
-  } */
+    background: color-mix(in srgb, ${(p) => p.theme.accent} 10%, transparent);
+  }
 `;

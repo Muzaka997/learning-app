@@ -4,101 +4,87 @@ export const BookCardStyles = styled.div`
   display: flex;
   flex-direction: column;
   width: 230px;
-  height: 540px;
-  color: ${(p) => p.theme.text};
-  background-color: ${(p) => p.theme.background};
-  transition:
-    background-color 0.25s ease,
-    color 0.25s ease;
-  border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-  padding: 16px;
-  gap: 12px;
+  background: ${(p) => p.theme.cardBg};
+  border: 1px solid ${(p) => p.theme.cardBorder};
+  border-radius: 16px;
   overflow: hidden;
-
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-
-  /* Optional: Add hover effect */
-  &:hover {
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-    transform: translateY(-2px);
-    transition:
-      box-shadow 0.2s,
-      transform 0.2s;
-  }
-`;
-
-export const StyledButton = styled.button`
-  width: 100%;
-  padding: 12px 20px;
-  background-color: ${(p) => p.theme.background};
-  color: ${(p) => p.theme.buttonText};
-  font-weight: 600;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
+  box-shadow: ${(p) => p.theme.cardShadow};
   transition:
-    background-color 0.2s,
-    transform 0.2s;
+    transform 0.25s cubic-bezier(0.2, 0.7, 0.3, 1),
+    box-shadow 0.25s ease;
 
   &:hover {
-    background-color: ${(p) => p.theme.background};
-    transform: translateY(-2px);
-  }
-
-  &:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
+    transform: translateY(-4px);
+    box-shadow: ${(p) => p.theme.cardShadowHover};
   }
 `;
 
 export const StyledImage = styled.img`
   display: block;
-  width: 100%;
-  height: 280px;
+  width: calc(100% - 36px);
+  margin: 18px 18px 0;
+  aspect-ratio: 2 / 3;
   object-fit: cover;
   border-radius: 8px;
-  margin-bottom: 12px;
-  transition: transform 0.2s;
-  flex-shrink: 0;
-
-  &:hover {
-    transform: scale(1.02);
-  }
+  box-shadow: 0 10px 22px -12px rgba(22, 35, 58, 0.5);
 `;
 
 export const Info = styled.div`
-  margin-top: 8px;
-  width: 100%;
   display: flex;
   flex-direction: column;
-  gap: 8px;
-  flex: 1; /* take remaining space so cards align */
+  gap: 7px;
+  padding: 18px 18px 0;
+  flex: 1;
 `;
 
 export const Title = styled.strong`
   display: block;
-  font-size: 1rem;
-  font-weight: 700;
-  color: ${(p) => p.theme.text};
+  font-family: ${(p) => p.theme.headingFont};
+  font-size: 19px;
+  font-weight: 600;
+  line-height: 1.25;
+  color: ${(p) => p.theme.heading};
 `;
 
 export const Author = styled.small`
-  color: ${(p) => p.theme.text};
+  font-size: 13.5px;
+  font-style: italic;
+  color: ${(p) => p.theme.accent};
 `;
 
 export const Description = styled.p`
-  margin-top: 8px;
-  font-size: 13px;
-  color: ${(p) => p.theme.text};
-  line-height: 1.3;
-  margin-bottom: 0;
-  /* clamp to 3 lines for consistent card heights */
+  margin: 4px 0 0;
+  font-size: 14.5px;
+  line-height: 1.55;
+  color: ${(p) => p.theme.textMuted};
+
   display: -webkit-box;
   -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
   overflow: hidden;
   text-overflow: ellipsis;
+`;
+
+export const StyledButton = styled.button`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  margin: 18px;
+  padding: 11px;
+  border-radius: 10px;
+  background: color-mix(in srgb, ${(p) => p.theme.accent} 10%, transparent);
+  color: ${(p) => p.theme.accent};
+  font-size: 15px;
+  font-weight: 600;
+  transition: background 0.16s ease;
+
+  &:hover {
+    background: color-mix(in srgb, ${(p) => p.theme.accent} 18%, transparent);
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
 `;

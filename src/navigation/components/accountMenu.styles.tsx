@@ -2,34 +2,31 @@ import styled from "styled-components";
 
 export const MenuCard = styled.div`
   position: absolute;
-  top: 110%;
+  top: 120%;
   right: 0;
 
   width: 220px;
   color: ${(p) => p.theme.text};
-  background-color: ${(p) => p.theme.background};
+  background-color: ${(p) => p.theme.cardBg};
+  border: 1px solid ${(p) => p.theme.cardBorder};
   transition:
-    background-color 0.5s ease,
-    color 0.5s ease;
-  border-radius: 12px;
+    background-color 0.25s ease,
+    color 0.25s ease;
+  border-radius: 14px;
   padding: 0.5rem;
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+  box-shadow: ${(p) => p.theme.cardShadow};
   z-index: 100;
 `;
 
 export const MenuItem = styled.div`
-  padding: 0.75rem 1rem;
-  border-radius: 8px;
-  color: #e5e7eb;
+  padding: 0.7rem 0.9rem;
+  border-radius: 10px;
+  color: ${(p) => p.theme.navText};
   cursor: pointer;
-  font-size: 0.9rem;
-  transition: none;
+  font-size: 0.95rem;
+  transition: background 0.16s ease;
 
   &:hover {
-    /* Keep appearance unchanged on hover */
-    background: transparent !important;
-    /* color: #e5e7eb !important; */
-    filter: none;
-    opacity: 1;
+    background: ${(p) => p.theme.hoverFill};
   }
 `;
