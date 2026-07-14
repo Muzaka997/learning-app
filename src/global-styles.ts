@@ -11,7 +11,8 @@ export const GlobalStyles = createGlobalStyle`
     }
 
     html {
-      overflow-x: hidden;
+      /* clip (not hidden) prevents horizontal scroll without breaking position: sticky */
+      overflow-x: clip;
       scroll-behavior: smooth;
     }
 
@@ -20,8 +21,9 @@ export const GlobalStyles = createGlobalStyle`
       min-height: 100vh;
       font-family: ${(p) => p.theme.bodyFont};
       font-size: 16px;
-      line-height: 1.6;
+      line-height: 1.65;
       font-weight: 400;
+      letter-spacing: -0.005em;
 
       color: ${(p) => p.theme.text};
       background-color: ${(p) => p.theme.background};
@@ -30,15 +32,20 @@ export const GlobalStyles = createGlobalStyle`
       text-rendering: optimizeLegibility;
       -webkit-font-smoothing: antialiased;
       -moz-osx-font-smoothing: grayscale;
-      overflow-x: hidden;
+      font-optical-sizing: auto;
+      font-kerning: normal;
+      font-variant-ligatures: common-ligatures contextual;
+      overflow-x: clip;
     }
 
     h1, h2, h3, h4, h5, h6 {
       font-family: ${(p) => p.theme.headingFont};
       color: ${(p) => p.theme.heading};
-      font-weight: 500;
-      letter-spacing: -0.015em;
-      line-height: 1.15;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      line-height: 1.12;
+      font-optical-sizing: auto;
+      text-wrap: balance;
     }
 
     ul, li {

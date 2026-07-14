@@ -3,12 +3,14 @@ import styled from "styled-components";
 export const UploadForm = styled.form`
   display: flex;
   flex-direction: column;
+  align-items: center;
   gap: 16px;
 `;
 
 export const FileRow = styled.div`
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 12px;
   flex-wrap: wrap;
 `;
@@ -18,64 +20,76 @@ export const HiddenFileInput = styled.input`
 `;
 
 export const FileButton = styled.label`
-  background: rgba(255, 255, 255, 0.04);
-  color: ${(p) => p.theme.text};
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 10px;
-  padding: 10px 14px;
+  padding: 12px 20px;
+  border-radius: 12px;
+  font-size: 14.5px;
+  font-weight: 600;
   cursor: pointer;
+  color: ${(p) => p.theme.heading};
+  background: transparent;
+  border: 1px solid ${(p) => p.theme.inputBorder};
   transition:
-    background 0.2s ease,
-    transform 0.15s ease;
+    background 0.16s ease,
+    border-color 0.16s ease;
 
   &:hover {
-    background: rgba(255, 255, 255, 0.06);
-    transform: translateY(-1px);
+    background: color-mix(in srgb, ${(p) => p.theme.accent} 8%, transparent);
+    border-color: color-mix(in srgb, ${(p) => p.theme.accent} 35%, transparent);
   }
 `;
 
 export const FileName = styled.span`
-  color: ${(p) => p.theme.text};
-  opacity: 0.8;
-  font-size: 0.92rem;
+  max-width: 220px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: ${(p) => p.theme.textMuted};
+  font-size: 14px;
 `;
 
 export const SubmitButton = styled.button`
-  background: ${(p) => p.theme.buttonBackground};
-  color: ${(p) => p.theme.buttonText};
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  padding: 10px 16px;
-  border-radius: 10px;
+  padding: 12px 22px;
+  border: none;
+  border-radius: 12px;
+  font-size: 14.5px;
   font-weight: 600;
+  cursor: pointer;
+  color: #fff;
+  background: ${(p) => p.theme.accent};
+  box-shadow: 0 12px 30px -14px ${(p) => p.theme.accent};
   transition:
-    background 0.2s ease,
-    transform 0.15s ease,
+    filter 0.16s ease,
+    transform 0.16s ease,
     opacity 0.2s ease;
 
   &:hover:not(:disabled) {
+    filter: brightness(1.08);
     transform: translateY(-1px);
   }
 
   &:disabled {
-    opacity: 0.6;
+    opacity: 0.5;
     cursor: not-allowed;
+    box-shadow: none;
   }
 `;
 
 export const ClearButton = styled.button`
-  background: rgba(255, 255, 255, 0.04);
-  color: ${(p) => p.theme.text};
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  padding: 10px 14px;
-  border-radius: 10px;
+  padding: 12px 18px;
+  border-radius: 12px;
+  font-size: 14.5px;
+  font-weight: 600;
+  cursor: pointer;
+  color: ${(p) => p.theme.textMuted};
+  background: transparent;
+  border: 1px solid transparent;
   transition:
-    background 0.2s ease,
-    transform 0.15s ease,
-    opacity 0.2s ease;
+    background 0.16s ease,
+    color 0.16s ease;
 
   &:hover:not(:disabled) {
-    background: rgba(255, 255, 255, 0.06);
-    transform: translateY(-1px);
+    background: ${(p) => p.theme.hoverFill};
+    color: ${(p) => p.theme.heading};
   }
 
   &:disabled {
@@ -85,13 +99,14 @@ export const ClearButton = styled.button`
 `;
 
 export const Preview = styled.div`
-  margin-top: 0.5rem;
+  margin-top: 4px;
 `;
 
 export const PreviewImage = styled.img`
-  width: 220px;
-  height: 220px;
+  width: 132px;
+  height: 132px;
   object-fit: cover;
   border-radius: 16px;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.35);
+  border: 1px solid ${(p) => p.theme.cardBorder};
+  box-shadow: ${(p) => p.theme.cardShadow};
 `;

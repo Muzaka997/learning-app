@@ -1,4 +1,6 @@
 import "./App.css";
+import { ApolloProvider } from "@apollo/client/react";
+import { apolloClient } from "./apollo/client";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import MainPage from "./pages/main-page/main";
 import CoursesPage from "./pages/courses/Courses";
@@ -24,10 +26,11 @@ import PrivateRoute from "./pages/auth/privateRoute";
 
 export default function App() {
   return (
-    <CustomThemeProvider>
-      <GlobalStyles />
+    <ApolloProvider client={apolloClient}>
+      <CustomThemeProvider>
+        <GlobalStyles />
 
-      <BrowserRouter>
+        <BrowserRouter>
         <AuthProvider>
           <Routes>
             {/* Auth routes (no layout) */}
@@ -66,7 +69,8 @@ export default function App() {
             />
           </Routes>
         </AuthProvider>
-      </BrowserRouter>
-    </CustomThemeProvider>
+        </BrowserRouter>
+      </CustomThemeProvider>
+    </ApolloProvider>
   );
 }

@@ -1,6 +1,11 @@
 import styled from "styled-components";
 import { NavLink } from "react-router-dom";
 
+/* Breakpoints:
+   - > 1240px : full header (brand + tagline, centred nav, rule, avatar + "My Account", theme)
+   - 1080–1240: nav still shown, but tagline + account label hidden so it fits
+   - <= 1080px: nav collapses into the fixed bottom tab bar (compact header) */
+
 export const HeaderWrapper = styled.header`
   position: sticky;
   top: 0;
@@ -9,8 +14,8 @@ export const HeaderWrapper = styled.header`
   z-index: 50;
   width: 100%;
   background: ${(p) => p.theme.headerBg};
-  backdrop-filter: saturate(1.4) blur(12px);
-  -webkit-backdrop-filter: saturate(1.4) blur(12px);
+  backdrop-filter: saturate(1.4) blur(14px);
+  -webkit-backdrop-filter: saturate(1.4) blur(14px);
   border-bottom: 1px solid ${(p) => p.theme.headerBorder};
   transition: background-color 0.25s ease;
   box-sizing: border-box;
@@ -19,44 +24,41 @@ export const HeaderWrapper = styled.header`
 export const HeaderInner = styled.div`
   display: flex;
   align-items: center;
-  justify-content: flex-start;
-  gap: 32px;
+  justify-content: center;
+  gap: 28px;
   width: 100%;
-  padding: 14px 40px;
+  padding: 16px 40px;
   box-sizing: border-box;
+  flex-wrap: wrap;
 
-  @media (max-width: 900px) {
-    gap: 16px;
-    padding: 12px 20px;
-    flex-wrap: wrap;
+  @media (max-width: 1080px) {
+    gap: 12px;
+    padding: 12px 16px;
   }
 `;
 
 export const Brand = styled.div`
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 14px;
   cursor: pointer;
+  flex-shrink: 0;
   color: ${(p) => p.theme.heading};
 
   /* gradient logo badge */
   .brand-badge {
     display: grid;
     place-items: center;
-    width: 40px;
-    height: 40px;
+    width: 46px;
+    height: 46px;
     flex-shrink: 0;
-    border-radius: 12px;
+    border-radius: 13px;
     color: #fff;
-    background: linear-gradient(
-      145deg,
-      ${(p) => p.theme.accent},
-      color-mix(in srgb, ${(p) => p.theme.accent} 65%, #12233f)
-    );
-    box-shadow: 0 8px 18px -8px ${(p) => p.theme.accent};
+    background: linear-gradient(150deg, #5b8def, #3f63c4);
+    box-shadow: 0 8px 20px -8px rgba(91, 141, 239, 0.7);
   }
   .brand-badge svg {
-    font-size: 22px !important;
+    font-size: 24px !important;
     color: #fff;
   }
 
@@ -68,17 +70,26 @@ export const Brand = styled.div`
   .brand-name {
     font-family: ${(p) => p.theme.headingFont};
     font-weight: 600;
-    font-size: 22px;
+    font-size: 21px;
     letter-spacing: -0.01em;
+    white-space: nowrap;
     color: ${(p) => p.theme.heading};
   }
   .brand-tagline {
     font-family: ${(p) => p.theme.bodyFont};
-    font-size: 11px;
+    font-size: 10.5px;
     font-weight: 500;
-    letter-spacing: 0.14em;
+    letter-spacing: 0.24em;
     text-transform: uppercase;
+    white-space: nowrap;
     color: ${(p) => p.theme.textSubtle};
+  }
+
+  /* hide the tagline once space gets tight, so the nav still fits */
+  @media (max-width: 1240px) {
+    .brand-tagline {
+      display: none;
+    }
   }
 `;
 
@@ -86,18 +97,22 @@ export const NavList = styled.nav`
   display: flex;
   align-items: center;
   gap: 4px;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
+
+  @media (max-width: 1080px) {
+    display: none;
+  }
 `;
 
 export const NavItem = styled(NavLink)`
-  position: relative;
   display: inline-flex;
   align-items: center;
-  gap: 8px;
-  padding: 9px 15px;
-  border-radius: 999px;
+  gap: 9px;
+  padding: 10px 16px;
+  border-radius: 11px; /* rounded rectangle, matching the mockup (not a pill) */
   font-size: 15px;
   font-weight: 500;
+  white-space: nowrap;
   color: ${(p) => p.theme.navText};
   text-decoration: none;
   transition:
@@ -114,29 +129,31 @@ export const NavItem = styled(NavLink)`
   }
 
   &.active {
-    background: color-mix(in srgb, ${(p) => p.theme.accent} 15%, transparent);
+    background: color-mix(in srgb, ${(p) => p.theme.accent} 16%, transparent);
     color: ${(p) => p.theme.accent};
-    font-weight: 600;
+  }
+`;
+
+/* short vertical divider between nav and account, like the mockup's .vrule */
+export const Vrule = styled.span`
+  width: 1px;
+  height: 34px;
+  flex-shrink: 0;
+  background: ${(p) => p.theme.headerBorder};
+
+  @media (max-width: 1080px) {
+    display: none;
   }
 `;
 
 export const NavButtons = styled.div`
-  position: absolute;
-  right: 24px;
-  top: 50%;
-  transform: translateY(-50%);
   display: flex;
   align-items: center;
   gap: 14px;
-  padding-left: 22px;
-  border-left: 1px solid ${(p) => p.theme.headerBorder};
+  flex-shrink: 0;
 
-  @media (max-width: 900px) {
-    position: static;
-    transform: none;
-    padding-left: 0;
-    border-left: none;
-    width: 100%;
+  @media (max-width: 1080px) {
+    margin-left: auto;
     justify-content: flex-end;
   }
 `;
@@ -158,7 +175,7 @@ export const NavButton = styled.button`
 export const AccountBox = styled.div`
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 11px;
   cursor: pointer;
   padding: 4px 6px;
   border-radius: 999px;
@@ -174,12 +191,20 @@ export const AccountBox = styled.div`
   &:hover {
     background: ${(p) => p.theme.hoverFill};
   }
+
+  /* avatar only once space gets tight */
+  @media (max-width: 1240px) {
+    span {
+      display: none;
+    }
+  }
 `;
 
 export const Avatar = styled.img`
-  width: 38px;
-  height: 38px;
+  width: 40px;
+  height: 40px;
   border-radius: 50%;
   object-fit: cover;
+  border: 2px solid ${(p) => p.theme.inputBorder};
   background: ${(p) => p.theme.hoverFill};
 `;

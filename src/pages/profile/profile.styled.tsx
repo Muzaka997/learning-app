@@ -1,113 +1,115 @@
 import styled from "styled-components";
 
 export const Page = styled.div`
-  min-height: calc(100vh - 80px);
-  max-height: 90vh;
-  padding: 2.5rem 1.5rem;
-  color: ${(p) => p.theme.text};
-  background-color: ${(p) => p.theme.background};
-  transition:
-    background-color 0.25s ease,
-    color 0.25s ease;
   display: flex;
-  /* align-items: center;
-  justify-content: center; */
-  position: relative;
+  justify-content: center;
 `;
 
 export const Card = styled.div`
   width: 100%;
   max-width: 640px;
-  padding: 2.25rem;
-  border-radius: 20px;
+  margin: 0 auto;
+  padding: 44px;
+  border-radius: 24px;
   color: ${(p) => p.theme.text};
-  background: linear-gradient(
-      180deg,
-      rgba(255, 255, 255, 0.04),
-      rgba(255, 255, 255, 0.02)
-    )
-    ${(p) => p.theme.background};
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  backdrop-filter: blur(10px);
-  box-shadow:
-    0 10px 30px rgba(0, 0, 0, 0.25),
-    inset 0 1px 0 rgba(255, 255, 255, 0.04);
+  background: ${(p) => p.theme.cardBg};
+  border: 1px solid ${(p) => p.theme.cardBorder};
+  box-shadow: ${(p) => p.theme.cardShadow};
+
+  @media (max-width: 760px) {
+    padding: 28px 20px;
+    border-radius: 20px;
+  }
 `;
 
-export const Title = styled.h2`
-  font-size: 2rem;
-  margin-bottom: 1.25rem;
+export const Title = styled.h1`
+  margin: 0 0 30px;
+  font-family: ${(p) => p.theme.headingFont};
+  font-weight: 600;
+  font-size: 40px;
+  letter-spacing: -0.02em;
   text-align: center;
-  font-weight: 800;
-  letter-spacing: 0.2px;
-`;
+  color: ${(p) => p.theme.heading};
 
-export const InfoRow = styled.p`
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(255, 255, 255, 0.06);
-  color: ${(p) => p.theme.text};
-  margin: 0.5rem 0;
-  padding: 0.75rem 1rem;
-  font-size: 0.98rem;
-  border-radius: 10px;
-
-  strong {
-    color: #9fb3c8;
-    font-weight: 700;
+  @media (max-width: 760px) {
+    font-size: 30px;
   }
 `;
 
 export const AvatarWrapper = styled.div`
   display: flex;
   justify-content: center;
-  margin: 1.5rem 0 1rem;
-  position: relative;
+  margin: 0 0 28px;
 `;
 
 export const Avatar = styled.img`
-  width: 160px;
-  height: 160px;
-  object-fit: cover;
+  width: 132px;
+  height: 132px;
   border-radius: 50%;
-  border: 0;
+  object-fit: cover;
+  background: ${(p) => p.theme.hoverFill};
+  border: 3px solid ${(p) => p.theme.cardBg};
   box-shadow:
-    0 10px 20px rgba(0, 0, 0, 0.35),
-    0 0 0 4px rgba(255, 255, 255, 0.06);
-  outline: 3px solid rgba(255, 255, 255, 0.06);
-  transition: transform 0.2s ease;
+    0 0 0 3px color-mix(in srgb, ${(p) => p.theme.accent} 45%, transparent),
+    ${(p) => p.theme.cardShadow};
+`;
 
-  &:hover {
-    transform: scale(1.02);
+export const AvatarFallback = styled.div`
+  width: 132px;
+  height: 132px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  font-family: ${(p) => p.theme.headingFont};
+  font-weight: 600;
+  font-size: 52px;
+  color: #fff;
+  background: linear-gradient(150deg, #5b8def, #3f63c4);
+  border: 3px solid ${(p) => p.theme.cardBg};
+  box-shadow:
+    0 0 0 3px color-mix(in srgb, ${(p) => p.theme.accent} 45%, transparent),
+    ${(p) => p.theme.cardShadow};
+`;
+
+export const InfoRow = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 12px;
+  padding: 16px 20px;
+  border-radius: 14px;
+  background: ${(p) => p.theme.hoverFill};
+  border: 1px solid ${(p) => p.theme.cardBorder};
+
+  .label {
+    font-size: 13.5px;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    color: ${(p) => p.theme.textMuted};
+  }
+  .value {
+    font-size: 15px;
+    font-weight: 500;
+    color: ${(p) => p.theme.heading};
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 `;
 
 export const UploadSection = styled.div`
-  margin-top: 1.75rem;
-  border-top: 1px solid rgba(255, 255, 255, 0.08);
-  padding-top: 1.25rem;
+  margin-top: 28px;
+  padding-top: 24px;
+  border-top: 1px solid ${(p) => p.theme.cardBorder};
 
-  form {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    flex-wrap: wrap;
-  }
-
-  input[type="file"] {
-    color: ${(p) => p.theme.text};
-    background: rgba(255, 255, 255, 0.04);
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    padding: 10px 12px;
-    border-radius: 10px;
-  }
-
-  button[type="submit"] {
-    background: ${(p) => p.theme.buttonBackground};
-    color: ${(p) => p.theme.buttonText};
-    border: 1px solid rgba(255, 255, 255, 0.08);
+  .upload-heading {
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: ${(p) => p.theme.textSubtle};
+    text-align: center;
+    margin: 0 0 16px;
   }
 `;

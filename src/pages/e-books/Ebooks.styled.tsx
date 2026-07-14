@@ -16,21 +16,39 @@ export const EBooksContainer = styled.div<{ $darkMode?: boolean }>`
     letter-spacing: -0.02em;
     color: ${(p) => p.theme.heading};
   }
+
+  @media (max-width: 760px) {
+    h1 {
+      font-size: 32px;
+    }
+  }
 `;
 
 export const StyledBooksContainer = styled.ul`
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
   gap: 24px;
   list-style: none;
   padding: 0;
   margin: 0;
+
+  @media (max-width: 1100px) {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  @media (max-width: 760px) {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 14px;
+  }
 `;
 
 export const StyledSearchContainer = styled.div`
   display: flex;
   gap: 12px;
   align-items: center;
+
+  @media (max-width: 760px) {
+    flex-wrap: wrap;
+  }
 `;
 
 export const StyledButton = styled.button<{ $darkMode?: boolean }>`
@@ -57,7 +75,7 @@ export const StyledButton = styled.button<{ $darkMode?: boolean }>`
 `;
 
 export const StyledTextField = styled.input<{ $darkMode?: boolean }>`
-  flex: 0 1 460px;
+  flex: 1;
   height: 48px;
   padding: 0 16px;
   font-size: 15.5px;

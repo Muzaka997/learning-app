@@ -1,134 +1,96 @@
-import axios from "axios";
-import CoursesPage from "../courses/Courses";
-import BookCard from "../e-books/components/Ebook/BookCard";
-
-import {
-  StyledAppWrapper,
-  StyledContainer,
-  BooksCarousel,
-  CarouselWrapper,
-  CarouselButton,
-  Eyebrow,
-} from "./Main.styles";
-import config from "../../config";
-import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
-
-type Book = {
-  id: string;
-  title: string;
-  author: string;
-  description: string;
-  image: {
-    url: string;
-    publicId: string;
-  };
-  pdf?: string;
-};
-
-type BackendBook = {
-  _id?: string;
-  id?: string;
-  title: string;
-  author: string;
-  description: string;
-  image: {
-    url: string;
-    publicId: string;
-  };
-  pdf?: string;
-};
+import CoursesPage from "../courses/Courses";
+import { useCourses } from "../courses/hooks/useCourses";
+import {
+  BtnGhost,
+  BtnOutline,
+  BtnPrimary,
+  ContinueBody,
+  ContinueCap,
+  ContinueCard,
+  ContinueImg,
+  ContinueMedia,
+  ContinuePlaceholder,
+  Hero,
+  HeroActions,
+  HeroCopy,
+  HeroText,
+  HeroTitle,
+  Kicker,
+  ProgressFill,
+  ProgressRow,
+  ProgressTrack,
+  StyledAppWrapper,
+  Veil,
+} from "./Main.styles";
 
 const MainPage: React.FC = () => {
-  const [filteredBooks, setFilteredBooks] = useState<Book[]>([]);
   const navigate = useNavigate();
-  const rowRef = useRef<HTMLDivElement>(null);
+  const { courses } = useCourses();
 
-  useEffect(() => {
-    const fetchBooks = async () => {
-      const response = await axios.get(`${config.apiBaseURL}/books`);
-      const backendBooks = response.data.data as BackendBook[];
-      const mappedBooks: Book[] = backendBooks.map((book, i) => ({
-        id: book._id ?? book.id ?? String(i),
-        title: book.title,
-        author: book.author,
-        description: book.description,
-        image: book.image,
-        pdf: book.pdf,
-      }));
-
-      setFilteredBooks(mappedBooks);
-    };
-    fetchBooks();
-  }, []);
-
-  const openFromMain = (book: Book) => {
-    if (!book.pdf) return;
-    navigate(`/e-books?pdf=${book.id}`);
-  };
-
-  const scrollByAmount = 260; // roughly one card width with gap
-  const scrollLeft = () =>
-    rowRef.current?.scrollBy({ left: -scrollByAmount, behavior: "smooth" });
-  const scrollRight = () =>
-    rowRef.current?.scrollBy({ left: scrollByAmount, behavior: "smooth" });
+  // Feature the first course as the "continue learning" item.
+  const featured = courses[0];
+  const resume = () =>
+    navigate(featured ? `/courses/${featured.id}` : "/courses");
 
   return (
     <StyledAppWrapper>
-      <Eyebrow>Welcome back</Eyebrow>
-      <h1>My Learning App</h1>
-      <StyledContainer>
-        <p>
-          Discover literature step by step in a space designed for thoughtful
-          learning. Explore structured courses that guide you through literary
-          movements, authors, and ideas. Deepen your understanding with
-          carefully selected eBooks that support and expand each topic.{" "}
-        </p>
+      <Hero>
+        <HeroCopy>
+          <Kicker>Welcome back</Kicker>
+          <HeroTitle>My Learning App</HeroTitle>
+          <HeroText>
+            <p>
+              Discover literature step by step in a space designed for
+              thoughtful learning. Explore structured courses that guide you
+              through literary movements, authors, and ideas — deepened by
+              carefully selected eBooks that expand each topic.
+            </p>
+            <p>
+              As you progress, apply what you've learned through assignments
+              that encourage close reading, critical thinking, and
+              interpretation.
+            </p>
+          </HeroText>
+          <HeroActions>
+            <BtnPrimary onClick={() => navigate("/courses")}>
+              Explore courses
+            </BtnPrimary>
+            <BtnOutline onClick={() => navigate("/e-books")}>
+              Browse the library
+            </BtnOutline>
+          </HeroActions>
+        </HeroCopy>
 
-        <p>
-          As you progress, apply what you've learned through assignments that
-          encourage close reading, critical thinking, and interpretation.
-          Whether you are studying independently or following a guided path, the
-          platform helps you build knowledge gradually and meaningfully.
-        </p>
+        <ContinueCard>
+          <ContinueMedia>
+            {featured?.image?.url ? (
+              <ContinueImg src={featured.image.url} alt={featured.title} />
+            ) : (
+              <ContinuePlaceholder />
+            )}
+            <Veil />
+            <ContinueCap>
+              <div className="eyebrow">CONTINUE LEARNING</div>
+              <div className="title">
+                {featured?.title ?? "Start your first course"}
+              </div>
+            </ContinueCap>
+          </ContinueMedia>
+          <ContinueBody>
+            <ProgressRow>
+              <span>Course progress</span>
+              <strong>Lesson 3 of 8</strong>
+            </ProgressRow>
+            <ProgressTrack>
+              <ProgressFill style={{ width: "38%" }} />
+            </ProgressTrack>
+            <BtnGhost onClick={resume}>Resume course</BtnGhost>
+          </ContinueBody>
+        </ContinueCard>
+      </Hero>
 
-        <p>
-          Register to unlock full access to courses, readings, and assignments,
-          and to track your learning journey from start to finish.
-        </p>
-      </StyledContainer>
-      <CoursesPage></CoursesPage>
-      {/* Featured eBooks - single row with horizontal scroll */}
-      {filteredBooks.length > 0 && (
-        <>
-          <h2>Featured eBooks</h2>
-          <CarouselWrapper>
-            <CarouselButton
-              className="left"
-              aria-label="Scroll left"
-              onClick={scrollLeft}
-            >
-              ‹
-            </CarouselButton>
-            <BooksCarousel ref={rowRef}>
-              {filteredBooks.map((book) => (
-                <BookCard
-                  key={book.id}
-                  book={book}
-                  onRead={() => openFromMain(book)}
-                />
-              ))}
-            </BooksCarousel>
-            <CarouselButton
-              className="right"
-              aria-label="Scroll right"
-              onClick={scrollRight}
-            >
-              ›
-            </CarouselButton>
-          </CarouselWrapper>
-        </>
-      )}
+      <CoursesPage mode="home" />
     </StyledAppWrapper>
   );
 };

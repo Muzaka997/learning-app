@@ -10,6 +10,7 @@ import {
   NavButtons,
   NavList,
   NavItem,
+  Vrule,
 } from "./styledHeader";
 import HomeIcon from "@mui/icons-material/Home";
 import SchoolIcon from "@mui/icons-material/School";
@@ -59,6 +60,8 @@ const Header: React.FC = () => {
             </NavItem>
           </NavList>
         )}
+
+        {user && <Vrule />}
 
         <NavButtons>
           {user ? (
