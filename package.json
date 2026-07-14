@@ -12,15 +12,18 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@apollo/client": "^4.2.7",
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.1",
     "@mui/icons-material": "^7.3.7",
     "@mui/material": "^7.3.7",
     "axios": "^1.13.4",
+    "graphql": "^16.14.2",
     "react": "^19.2.4",
     "react-dom": "^19.2.4",
     "react-pdf": "^10.3.0",
     "react-router-dom": "^7.13.0",
+    "rxjs": "^7.8.2",
     "styled-components": "^6.3.8"
   },
   "devDependencies": {

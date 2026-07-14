@@ -15,13 +15,18 @@ export const StyledWrapper = styled.div`
 
 export const StyledContent = styled.div`
   width: 100%;
-  max-width: 1240px;
+  max-width: 1280px;
   margin: 0 auto;
   padding: 60px 40px 90px;
   box-sizing: border-box;
 
+  @media (max-width: 1080px) {
+    /* extra bottom space so content clears the fixed bottom tab bar */
+    padding: 48px 32px calc(96px + env(safe-area-inset-bottom));
+  }
+
   @media (max-width: 640px) {
-    padding: 36px 20px 64px;
+    padding: 36px 20px calc(96px + env(safe-area-inset-bottom));
   }
 `;
 

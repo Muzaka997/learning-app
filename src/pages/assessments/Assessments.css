@@ -3,9 +3,25 @@
 }
 
 .page-title {
-  font-size: 48px;
+  font-size: 54px;
   letter-spacing: -0.02em;
-  margin-bottom: 48px;
+  margin-bottom: 10px;
+}
+
+.page-sub {
+  margin: 0 auto 44px;
+  font-size: 17px;
+  opacity: 0.75;
+}
+
+@media (max-width: 760px) {
+  .page-title {
+    font-size: 34px;
+  }
+  .page-sub {
+    font-size: 15px;
+    margin-bottom: 32px;
+  }
 }
 
 .assessments-grid {

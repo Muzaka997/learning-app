@@ -1,4 +1,9 @@
 import {
+  Body,
+  Media,
+  Meta,
+  Placeholder,
+  SkillChip,
   StyledButton,
   StyledCourseCard,
   StyledImage,
@@ -6,6 +11,9 @@ import {
 
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../../auth/useAuth";
+import ScheduleIcon from "@mui/icons-material/Schedule";
+import MenuBookIcon from "@mui/icons-material/MenuBook";
+import AutoStoriesIcon from "@mui/icons-material/AutoStories";
 
 export interface WeekContent {
   type: "video" | "homework";
@@ -38,11 +46,20 @@ export interface Course {
 
 interface Props {
   course: Partial<Course>;
+  /** "full" = Courses page (solid button, square image); "home" = Home grid (ghost button, 4:3 image). */
+  variant?: "full" | "home";
 }
 
-const CourseCard: React.FC<Props> = ({ course }) => {
+const CourseCard: React.FC<Props> = ({ course, variant = "full" }) => {
   const navigate = useNavigate();
   const { user } = useAuth();
+
+  const isFull = variant === "full";
+
+  const lessonCount = (course.Weeks ?? []).reduce(
+    (total, w) => total + (w.content?.length ?? 0),
+    0,
+  );
 
   const handleSubmit = () => {
     navigate(`/courses/${course.id}`);
@@ -50,20 +67,58 @@ const CourseCard: React.FC<Props> = ({ course }) => {
 
   return (
     <StyledCourseCard $darkMode={false}>
-      {course.image?.url ? (
-        <StyledImage src={course.image.url} alt={course.title} loading="lazy" />
-      ) : (
-        <p>No image available</p>
-      )}
+      <Media>
+        {course.image?.url ? (
+          <StyledImage
+            src={course.image.url}
+            alt={course.title}
+            loading="lazy"
+            $square={isFull}
+          />
+        ) : (
+          <Placeholder $square={isFull}>
+            <AutoStoriesIcon />
+          </Placeholder>
+        )}
+        {isFull && course.minimumSkill && (
+          <SkillChip $level={course.minimumSkill}>
+            {course.minimumSkill}
+          </SkillChip>
+        )}
+      </Media>
 
-      <h3>{course.title}</h3>
-      <p>{course.description}</p>
+      <Body>
+        {isFull && (course.weeks || lessonCount > 0) && (
+          <Meta>
+            {course.weeks ? (
+              <span>
+                <ScheduleIcon />
+                {course.weeks} {course.weeks === 1 ? "week" : "weeks"}
+              </span>
+            ) : null}
+            {course.weeks && lessonCount > 0 ? (
+              <span className="dot" />
+            ) : null}
+            {lessonCount > 0 ? (
+              <span>
+                <MenuBookIcon />
+                {lessonCount} {lessonCount === 1 ? "lesson" : "lessons"}
+              </span>
+            ) : null}
+          </Meta>
+        )}
 
-      {user ? (
-        <StyledButton onClick={handleSubmit}>View Course</StyledButton>
-      ) : (
-        <StyledButton>Please log in to view course details.</StyledButton>
-      )}
+        <h3>{course.title}</h3>
+        <p>{course.description}</p>
+
+        {user ? (
+          <StyledButton $primary={isFull} onClick={handleSubmit}>
+            View Course
+          </StyledButton>
+        ) : (
+          <StyledButton>Please log in to view course details.</StyledButton>
+        )}
+      </Body>
     </StyledCourseCard>
   );
 };

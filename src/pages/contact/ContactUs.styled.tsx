@@ -14,6 +14,10 @@ export const Title = styled.h1`
   font-size: 44px;
   letter-spacing: -0.02em;
   color: ${(p) => p.theme.heading};
+
+  @media (max-width: 760px) {
+    font-size: 32px;
+  }
 `;
 
 export const Subtitle = styled.p`

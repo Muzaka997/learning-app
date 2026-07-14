@@ -9,6 +9,7 @@ import {
   InfoRow,
   AvatarWrapper,
   Avatar,
+  AvatarFallback,
   UploadSection,
 } from "./profile.styled";
 
@@ -17,27 +18,33 @@ const Profile: React.FC = () => {
 
   if (!user) return <p>You must be logged in to view this page.</p>;
 
+  const initial = (user.name?.trim()?.[0] || "?").toUpperCase();
+
   return (
     <Page>
       <Card>
         <Title>Profile</Title>
 
-        <InfoRow>
-          <strong>Name:</strong> {user.name}
-        </InfoRow>
-
-        <InfoRow>
-          <strong>Email:</strong> {user.email}
-        </InfoRow>
-
         <AvatarWrapper>
-          <Avatar
-            src={user.profilePhoto || "/default-avatar.png"}
-            alt="Profile"
-          />
+          {user.profilePhoto ? (
+            <Avatar src={user.profilePhoto} alt={user.name || "Profile"} />
+          ) : (
+            <AvatarFallback>{initial}</AvatarFallback>
+          )}
         </AvatarWrapper>
 
+        <InfoRow>
+          <span className="label">Name</span>
+          <span className="value">{user.name}</span>
+        </InfoRow>
+
+        <InfoRow>
+          <span className="label">Email</span>
+          <span className="value">{user.email}</span>
+        </InfoRow>
+
         <UploadSection>
+          <p className="upload-heading">Update profile photo</p>
           <UploadPhoto />
         </UploadSection>
       </Card>

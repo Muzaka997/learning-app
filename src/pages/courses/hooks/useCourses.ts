@@ -1,6 +1,5 @@
-import { useEffect, useState, useCallback } from "react";
-import axios from "axios";
-import config from "../../../config";
+import { gql } from "@apollo/client";
+import { useQuery } from "@apollo/client/react";
 import type { Course } from "../components/CourseCard/CourseCard";
 
 interface UseCoursesResult {
@@ -10,51 +9,64 @@ interface UseCoursesResult {
   refetch: () => Promise<void>;
 }
 
-// Map raw backend course into the UI Course type
+// Raw shape returned by the GraphQL `courses` query (weeks is a string here).
+interface CoursesQueryData {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  courses: any[];
+}
+
+export const COURSES_QUERY = gql`
+  query Courses {
+    courses {
+      id
+      title
+      description
+      weeks
+      tuition
+      minimumSkill
+      scholarshipAvailable
+      image {
+        url
+        publicId
+      }
+      Weeks {
+        week
+        content {
+          type
+          title
+          url
+          description
+        }
+      }
+    }
+  }
+`;
+
+// Backend stores `weeks` as a string; the UI Course type expects a number.
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const mapCourse = (c: any): Course => ({
-  id: c._id,
-  title: c.title,
-  description: c.description,
-  image: c.image,
-  tuition: c.tuition,
-  minimumSkill: c.minimumSkill,
-  scholarshipAvailable: c.scholarshipAvailable,
-  // Backend stores weeks as string; we keep Weeks array for details page
-  // "weeks" numeric is optional on card usage
-  weeks: Number(c.weeks ?? 0) as unknown as number,
-  Weeks: c.Weeks,
+  ...c,
+  weeks: Number(c.weeks ?? 0),
 });
 
 export const useCourses = (): UseCoursesResult => {
-  const [courses, setCourses] = useState<Course[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
-  const [error, setError] = useState<string | null>(null);
+  const { data, loading, error, refetch } = useQuery<CoursesQueryData>(
+    COURSES_QUERY,
+    {
+      fetchPolicy: "cache-and-network",
+    },
+  );
 
-  const fetchCourses = useCallback(async () => {
-    setLoading(true);
-    setError(null);
-    try {
-      const resp = await axios.get(`${config.apiBaseURL}/courses`, {
-        withCredentials: true,
-      });
-      const backendCourses = resp.data?.data ?? [];
-      const mapped: Course[] = backendCourses.map(mapCourse);
-      setCourses(mapped);
-    } catch (e) {
-      const msg =
-        (e as Error)?.message || "Failed to load courses. Please try again.";
-      setError(msg);
-    } finally {
-      setLoading(false);
-    }
-  }, []);
+  const courses: Course[] = (data?.courses ?? []).map(mapCourse);
 
-  useEffect(() => {
-    void fetchCourses();
-  }, [fetchCourses]);
-
-  return { courses, loading, error, refetch: fetchCourses };
+  return {
+    courses,
+    loading,
+    error: error ? error.message : null,
+    refetch: async () => {
+      await refetch();
+    },
+  };
 };
 
 export default useCourses;

@@ -59,6 +59,9 @@ const Assessments: React.FC = () => {
   return (
     <div className="assessments-container">
       <h1 className="page-title">Assessments</h1>
+      <p className="page-sub">
+        Review how your understanding is progressing across each course.
+      </p>
 
       <div className="assessments-grid">
         {tests.map((assessment) => (

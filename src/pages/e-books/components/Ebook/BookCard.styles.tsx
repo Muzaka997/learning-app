@@ -3,7 +3,7 @@ import styled from "styled-components";
 export const BookCardStyles = styled.div`
   display: flex;
   flex-direction: column;
-  width: 230px;
+  width: 100%;
   background: ${(p) => p.theme.cardBg};
   border: 1px solid ${(p) => p.theme.cardBorder};
   border-radius: 16px;

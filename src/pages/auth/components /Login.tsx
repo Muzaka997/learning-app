@@ -1,18 +1,33 @@
-import { Button, Typography } from "@mui/material";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../useAuth";
+import ThemeButton from "../../../theme/ThemeButton";
 import {
-  IconRight,
-  IconWrapper,
-  InputWrapper,
-  StyledBox,
-  StyledH,
-  StyledInput,
-  StyledWelcome,
+  AuthBrand,
+  AuthCard,
+  AuthForm,
+  AuthScreen,
+  BrandMark,
+  BrandName,
+  BrandRow,
+  BrandTagline,
+  BrandText,
+  ErrorText,
+  EyeButton,
+  Field,
+  FieldWrap,
+  Form,
+  FormEyebrow,
+  FormTitle,
+  Label,
+  PrimaryButton,
+  Quote,
+  SecondaryButton,
+  ThemeFixed,
 } from "./StyledLogin";
+import AutoStoriesIcon from "@mui/icons-material/AutoStories";
 import EmailIcon from "@mui/icons-material/Email";
-import PasswordIcon from "@mui/icons-material/Password";
+import LockIcon from "@mui/icons-material/Lock";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 
@@ -30,7 +45,7 @@ export default function Login() {
   };
 
   const handleSubmit = async (e?: React.FormEvent) => {
-    if (e) e.preventDefault(); // prevent page reload
+    if (e) e.preventDefault();
     try {
       await login(email, password);
       navigate("/");
@@ -42,54 +57,75 @@ export default function Login() {
   };
 
   return (
-    <StyledBox>
-      <p>Welcome!</p>
-      <StyledWelcome>Sign into your account</StyledWelcome>
+    <AuthScreen>
+      <ThemeFixed>
+        <ThemeButton />
+      </ThemeFixed>
 
-      {/* Wrap inputs in a form to handle Enter */}
-      <form onSubmit={handleSubmit}>
-        <StyledH>Email</StyledH>
-        <InputWrapper>
-          <IconWrapper>
-            <EmailIcon />
-          </IconWrapper>
-          <StyledInput
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            placeholder="Email"
-          />
-        </InputWrapper>
+      <AuthCard>
+        <AuthBrand>
+          <BrandRow>
+            <BrandMark>
+              <AutoStoriesIcon />
+            </BrandMark>
+            <BrandText>
+              <BrandName>Learning App</BrandName>
+              <BrandTagline>Read. Learn. Reflect.</BrandTagline>
+            </BrandText>
+          </BrandRow>
+          <Quote>
+            <p className="quote">
+              “A reader lives a thousand lives before he dies.”
+            </p>
+            <p className="cite">— GEORGE R.R. MARTIN</p>
+          </Quote>
+        </AuthBrand>
 
-        <StyledH>Password</StyledH>
-        <InputWrapper>
-          <IconWrapper>
-            <PasswordIcon />
-          </IconWrapper>
-          <StyledInput
-            type={showPassword ? "text" : "password"} // toggle visibility
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            placeholder="Password"
-          />
-          <IconRight onClick={() => setShowPassword(!showPassword)}>
-            {showPassword ? <VisibilityOffIcon /> : <VisibilityIcon />}
-          </IconRight>
-        </InputWrapper>
+        <AuthForm>
+          <FormEyebrow>Welcome back!</FormEyebrow>
+          <FormTitle>Sign into your account</FormTitle>
 
-        {error && <Typography color="error">{error}</Typography>}
+          <Form onSubmit={handleSubmit}>
+            <Label htmlFor="login-email">Email</Label>
+            <FieldWrap>
+              <EmailIcon />
+              <Field
+                id="login-email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="you@example.com"
+              />
+            </FieldWrap>
 
-        <Button
-          variant="contained"
-          fullWidth
-          sx={{ mt: 2 }}
-          type="submit" // <--- important for Enter key
-        >
-          Login
-        </Button>
-        <Button onClick={createAcc} fullWidth>
-          Create New Account
-        </Button>
-      </form>
-    </StyledBox>
+            <Label htmlFor="login-password">Password</Label>
+            <FieldWrap>
+              <LockIcon />
+              <Field
+                id="login-password"
+                type={showPassword ? "text" : "password"}
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="Enter your password"
+                style={{ paddingRight: 44 }}
+              />
+              <EyeButton
+                type="button"
+                aria-label={showPassword ? "Hide password" : "Show password"}
+                onClick={() => setShowPassword(!showPassword)}
+              >
+                {showPassword ? <VisibilityOffIcon /> : <VisibilityIcon />}
+              </EyeButton>
+            </FieldWrap>
+
+            {error && <ErrorText>{error}</ErrorText>}
+
+            <PrimaryButton type="submit">Login</PrimaryButton>
+            <SecondaryButton type="button" onClick={createAcc}>
+              Create new account
+            </SecondaryButton>
+          </Form>
+        </AuthForm>
+      </AuthCard>
+    </AuthScreen>
   );
 }

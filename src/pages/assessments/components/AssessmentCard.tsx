@@ -49,7 +49,7 @@ const AssessmentCard: React.FC<Props> = ({ assessment }) => {
               cy="64"
               r={RADIUS}
               fill="none"
-              stroke="rgba(36,52,74,0.09)"
+              stroke="rgba(128,140,160,0.22)"
               strokeWidth="11"
             />
             <circle
