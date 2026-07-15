@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { useParams } from "react-router-dom";
-import axios from "axios";
+import { gql } from "@apollo/client";
+import { useQuery } from "@apollo/client/react";
 import type { Course } from "./CourseCard";
 import {
   ContentBlock,
@@ -15,7 +16,6 @@ import {
   WeekSummary,
   WeekTitle,
 } from "./StyledCoursePage";
-import config from "../../../../config";
 import {
   EssayArea,
   EssayLabel,
@@ -24,6 +24,36 @@ import {
   EssayButton,
   SaveNote,
 } from "./StyledCoursePage";
+
+export const COURSE_QUERY = gql`
+  query Course($id: ID!) {
+    course(id: $id) {
+      id
+      title
+      description
+      image {
+        url
+        publicId
+      }
+      tuition
+      minimumSkill
+      scholarshipAvailable
+      Weeks {
+        week
+        content {
+          type
+          title
+          url
+          description
+        }
+      }
+    }
+  }
+`;
+
+interface CourseQueryData {
+  course: Course | null;
+}
 
 const getYouTubeId = (url?: string) => {
   if (!url) return null;
@@ -37,7 +67,13 @@ const CoursePage = () => {
   const { id } = useParams<{ id: string }>();
   console.log("Course ID from URL:", id);
 
-  const [course, setCourse] = useState<Course | null>(null);
+  const { data } = useQuery<CourseQueryData>(COURSE_QUERY, {
+    variables: { id: id as string },
+    skip: !id,
+    fetchPolicy: "cache-and-network",
+  });
+  const course = data?.course ?? null;
+
   const storageKey = useMemo(
     () => (id ? `course_essays_${id}` : undefined),
     [id],
@@ -63,18 +99,6 @@ const CoursePage = () => {
       console.warn("Failed to save essay to localStorage", e);
     }
   }, [essays, storageKey]);
-
-  useEffect(() => {
-    const fetchCourse = async () => {
-      try {
-        const response = await axios.get(`${config.apiBaseURL}/courses/${id}`);
-        setCourse(response.data.data);
-      } catch (error) {
-        console.error("Error fetching course details:", error);
-      }
-    };
-    if (id) fetchCourse();
-  }, [id]);
 
   if (!course) return <p>Loading course...</p>;
 
