@@ -7,6 +7,8 @@ export function usePdfViewer(allBooks: Book[]) {
   const [activePdf, setActivePdf] = useState<string | null>(null);
   const [pdfName, setPdfName] = useState<string | null>(null);
   const [zoom, setZoom] = useState(1);
+  const [numPages, setNumPages] = useState<number | null>(null);
+  const [pageNumber, setPageNumber] = useState(1);
 
   const [searchParams, setSearchParams] = useSearchParams();
   const navigate = useNavigate();
@@ -25,6 +27,8 @@ export function usePdfViewer(allBooks: Book[]) {
       setActivePdf(blobUrl);
       setPdfName(pdf);
       setZoom(1);
+      setPageNumber(1);
+      setNumPages(null);
 
       if (id) {
         const next = new URLSearchParams(location.search);
@@ -99,11 +103,25 @@ export function usePdfViewer(allBooks: Book[]) {
     URL.revokeObjectURL(blobUrl);
   };
 
+  const onDocumentLoadSuccess = ({ numPages }: { numPages: number }) => {
+    setNumPages(numPages);
+    setPageNumber(1);
+  };
+
+  const nextPage = () =>
+    setPageNumber((p) => (numPages ? Math.min(numPages, p + 1) : p));
+  const prevPage = () => setPageNumber((p) => Math.max(1, p - 1));
+
   return {
     activePdf,
     pdfName,
     zoom,
     setZoom,
+    numPages,
+    pageNumber,
+    onDocumentLoadSuccess,
+    nextPage,
+    prevPage,
     openPdf,
     closePdf,
     downloadPdf,

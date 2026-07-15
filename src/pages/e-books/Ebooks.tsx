@@ -1,4 +1,6 @@
 import React from "react";
+import { Document, Page } from "react-pdf";
+import "./pdfSetup";
 import {
   EBooksContainer,
   StyledBooksContainer,
@@ -34,9 +36,21 @@ const EBooks: React.FC = () => {
     canNext,
     canPrev,
     setCurrentPage,
-  } = usePagination(filteredBooks, 10);
-  const { activePdf, pdfName, zoom, setZoom, openPdf, closePdf, downloadPdf } =
-    usePdfViewer(allBooks);
+  } = usePagination(filteredBooks, 8);
+  const {
+    activePdf,
+    pdfName,
+    zoom,
+    setZoom,
+    numPages,
+    pageNumber,
+    onDocumentLoadSuccess,
+    nextPage,
+    prevPage,
+    openPdf,
+    closePdf,
+    downloadPdf,
+  } = usePdfViewer(allBooks);
 
   const handleSubmit = () => {
     setSubmitted(true);
@@ -92,10 +106,22 @@ const EBooks: React.FC = () => {
           )}
         </>
       ) : (
-        <PdfOverlay onClick={closePdf}>
-          <PdfCard onClick={(e) => e.stopPropagation()}>
+        <PdfOverlay>
+          <PdfCard>
             <PdfToolbar>
               <PdfTitle>{pdfName}</PdfTitle>
+              <ToolbarButton onClick={prevPage} disabled={pageNumber <= 1}>
+                ‹
+              </ToolbarButton>
+              <PdfTitle style={{ flex: "0 0 auto", minWidth: 0 }}>
+                {pageNumber} / {numPages ?? "…"}
+              </PdfTitle>
+              <ToolbarButton
+                onClick={nextPage}
+                disabled={!!numPages && pageNumber >= numPages}
+              >
+                ›
+              </ToolbarButton>
               <ToolbarButton
                 onClick={() => setZoom((z) => Math.max(0.5, z - 0.25))}
               >
@@ -111,17 +137,23 @@ const EBooks: React.FC = () => {
             </PdfToolbar>
 
             <PdfFrameWrapper>
-              <iframe
-                src={activePdf}
-                title="PDF Reader"
-                style={{
-                  width: "100%",
-                  height: "100%",
-                  border: "none",
-                  transform: `scale(${zoom})`,
-                  transformOrigin: "top center",
-                }}
-              />
+              <Document
+                file={activePdf}
+                onLoadSuccess={onDocumentLoadSuccess}
+                loading={<div style={{ padding: 24 }}>Loading PDF…</div>}
+                error={
+                  <div style={{ padding: 24, color: "#ef4444" }}>
+                    Failed to load PDF.
+                  </div>
+                }
+              >
+                <Page
+                  pageNumber={pageNumber}
+                  scale={zoom}
+                  renderTextLayer
+                  renderAnnotationLayer
+                />
+              </Document>
             </PdfFrameWrapper>
           </PdfCard>
         </PdfOverlay>
