@@ -1,56 +1,59 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
+import { gql } from "@apollo/client";
+import { useQuery } from "@apollo/client/react";
 import type { Test } from "../Assessments";
-import authApi from "../../auth/authApi";
+
+export const TEST_QUERY = gql`
+  query Test($id: ID!) {
+    test(id: $id) {
+      id
+      courseTitle
+      title
+      timeLimitMinutes
+      passingScore
+      questions {
+        id
+        question
+        options
+      }
+    }
+  }
+`;
+
+interface TestQueryData {
+  test: Test | null;
+}
 
 export const useTest = (id?: string) => {
-  const [test, setTest] = useState<Test | null>(null);
+  // Kept for API compatibility with AssessmentPage; set after a successful submit.
   const [submitted, setSubmitted] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<unknown>(null);
 
-  useEffect(() => {
-    const fetchTest = async () => {
-      if (!id) {
-        setError(new Error("No id param present"));
-        return;
+  const { data, loading, error } = useQuery<TestQueryData>(TEST_QUERY, {
+    variables: { id: id as string },
+    skip: !id,
+    fetchPolicy: "cache-and-network",
+  });
+
+  const backendTest = data?.test ?? null;
+
+  const test: Test | null = backendTest
+    ? {
+        id: backendTest.id,
+        courseTitle: backendTest.courseTitle,
+        title: backendTest.title,
+        timeLimitMinutes: backendTest.timeLimitMinutes,
+        passingScore: backendTest.passingScore,
+        questions: backendTest.questions,
       }
-      setLoading(true);
-      setError(null);
-      try {
-        const response = await authApi.get(`/tests/${id}`);
-        const backendTest = response.data.data;
+    : null;
 
-        if (backendTest?.submitted) {
-          alert(
-            "You have already completed this test. You cannot take it again.",
-          );
-          setSubmitted(true);
-          setTest(null);
-          return;
-        }
-
-        const mapped: Test = {
-          id: backendTest._id || backendTest.id,
-          courseTitle: backendTest.courseTitle,
-          title: backendTest.title,
-          timeLimitMinutes: backendTest.timeLimitMinutes,
-          passingScore: backendTest.passingScore,
-          questions: backendTest.questions,
-          createdAt: backendTest.createdAt,
-        };
-        setTest(mapped);
-      } catch (e) {
-        console.error("Error fetching test:", e);
-        setError(e);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchTest();
-  }, [id]);
-
-  return { test, submitted, setSubmitted, loading, error } as const;
+  return {
+    test,
+    submitted,
+    setSubmitted,
+    loading,
+    error: error ?? (!id ? new Error("No id param present") : null),
+  } as const;
 };
 
 export default useTest;

@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
+import { gql } from "@apollo/client";
+import { useQuery } from "@apollo/client/react";
 import AssessmentCard from "./components/AssessmentCard";
 
 import "./Assessments.css";
-import axios from "axios";
-import config from "../../config";
 
 // Question type
 export interface Question {
@@ -23,38 +23,33 @@ export interface Test {
   createdAt?: Date; // optional because MongoDB will set it by default
 }
 
-type ResponseTestType = {
-  _id: string;
-  courseTitle: string;
-  title: string;
-  timeLimitMinutes: number;
-  passingScore: number;
-  questions: Question[];
-  createdAt?: Date;
-};
+export const TESTS_QUERY = gql`
+  query Tests {
+    tests {
+      id
+      courseTitle
+      title
+      timeLimitMinutes
+      passingScore
+      questions {
+        id
+        question
+        options
+      }
+    }
+  }
+`;
+
+interface TestsQueryData {
+  tests: Test[];
+}
 
 const Assessments: React.FC = () => {
-  const [tests, setTests] = useState<Test[]>([]);
+  const { data } = useQuery<TestsQueryData>(TESTS_QUERY, {
+    fetchPolicy: "cache-and-network",
+  });
 
-  useEffect(() => {
-    const fetchTests = async () => {
-      const response = await axios.get(`${config.apiBaseURL}/tests`);
-
-      const backendTests = response.data.data as ResponseTestType[];
-
-      const mappedTests: Test[] = backendTests.map((test) => ({
-        id: test._id,
-        courseTitle: test.courseTitle,
-        title: test.title,
-        timeLimitMinutes: test.timeLimitMinutes,
-        passingScore: test.passingScore,
-        questions: test.questions,
-        createdAt: test.createdAt,
-      }));
-      setTests(mappedTests);
-    };
-    fetchTests();
-  }, []);
+  const tests: Test[] = data?.tests ?? [];
 
   return (
     <div className="assessments-container">
