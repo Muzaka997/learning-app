@@ -1,11 +1,33 @@
 import { useState } from "react";
-import authApi from "../../auth/authApi";
+import { gql } from "@apollo/client";
+import { useMutation } from "@apollo/client/react";
 
 export type SubmitResult = {
   score: number;
   passed: boolean;
   correctAnswers: Record<string, string>;
 };
+
+const SUBMIT_TEST = gql`
+  mutation SubmitTest($testId: ID!, $answers: [AnswerInput!]!) {
+    submitTest(testId: $testId, answers: $answers) {
+      score
+      passed
+      correctAnswers {
+        questionId
+        answer
+      }
+    }
+  }
+`;
+
+interface SubmitTestData {
+  submitTest: {
+    score: number;
+    passed: boolean;
+    correctAnswers: { questionId: string; answer: string }[];
+  };
+}
 
 export const useSubmitTest = (
   testId: string | undefined,
@@ -14,7 +36,8 @@ export const useSubmitTest = (
   fetchCurrentUser: () => Promise<unknown>,
 ) => {
   const [result, setResult] = useState<SubmitResult | null>(null);
-  const [submitting, setSubmitting] = useState(false);
+  const [runSubmit, { loading: submitting }] =
+    useMutation<SubmitTestData>(SUBMIT_TEST);
 
   const submit = async (): Promise<boolean> => {
     if (!testId) {
@@ -31,16 +54,24 @@ export const useSubmitTest = (
       ([questionId, selectedOption]) => ({ questionId, selectedOption }),
     );
 
-    setSubmitting(true);
     try {
-      const response = await authApi.post(`/users/${testId}/submit`, {
-        answers: formattedAnswers,
+      const { data } = await runSubmit({
+        variables: { testId, answers: formattedAnswers },
       });
 
+      const payload = data?.submitTest;
+      if (!payload) throw new Error("No result returned");
+
+      // Rebuild the { questionId: answer } map the UI expects
+      const correctAnswers: Record<string, string> = {};
+      for (const c of payload.correctAnswers) {
+        correctAnswers[c.questionId] = c.answer;
+      }
+
       setResult({
-        score: response.data.score,
-        passed: response.data.passed,
-        correctAnswers: response.data.correctAnswers,
+        score: payload.score,
+        passed: payload.passed,
+        correctAnswers,
       });
 
       await fetchCurrentUser();
@@ -49,8 +80,6 @@ export const useSubmitTest = (
       console.error("Submit test failed:", e);
       alert("Failed to submit test. Please try again.");
       return false;
-    } finally {
-      setSubmitting(false);
     }
   };
 

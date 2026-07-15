@@ -1,6 +1,7 @@
 import { useState, type ChangeEvent, type FormEvent } from "react";
+import { gql } from "@apollo/client";
+import { useMutation } from "@apollo/client/react";
 import { useAuth } from "../../auth/useAuth";
-import config from "../../../config";
 import {
   UploadForm,
   FileRow,
@@ -14,11 +15,24 @@ import {
 } from "./Upload.styled";
 import { useEffect, useRef } from "react";
 
+const UPLOAD_PHOTO = gql`
+  mutation UploadProfilePhoto($userId: ID!, $file: Upload!) {
+    uploadProfilePhoto(userId: $userId, file: $file) {
+      success
+      imageUrl
+    }
+  }
+`;
+
+interface UploadPhotoData {
+  uploadProfilePhoto: { success: boolean; imageUrl: string | null };
+}
+
 const UploadPhoto: React.FC = () => {
   const { user, setUser } = useAuth();
   const [file, setFile] = useState<File | null>(null);
   const [imageUrl, setImageUrl] = useState<string | null>(null);
-  const [loading, setLoading] = useState(false);
+  const [uploadPhoto, { loading }] = useMutation<UploadPhotoData>(UPLOAD_PHOTO);
   const inputRef = useRef<HTMLInputElement>(null);
 
   // cleanup object URL on unmount
@@ -55,39 +69,23 @@ const UploadPhoto: React.FC = () => {
     if (!file || !user)
       return alert("Please select a file and ensure you are logged in");
 
-    setLoading(true);
-
-    const formData = new FormData();
-    formData.append("photo", file);
-
     try {
-      const token = localStorage.getItem("token");
-      const res = await fetch(`${config.apiBaseURL}/users/${user._id}/photo`, {
-        method: "PUT",
-        body: formData,
-        credentials: "include", // send cookie if present
-        headers: token ? { Authorization: `Bearer ${token}` } : undefined,
+      // Passing the File as a variable triggers a GraphQL multipart request.
+      const { data } = await uploadPhoto({
+        variables: { userId: user._id, file },
       });
 
-      const data: { success: boolean; imageUrl?: string; error?: string } =
-        await res.json();
-
-      if (!res.ok || !data.success)
-        throw new Error(data.error || "Upload failed");
+      const payload = data?.uploadProfilePhoto;
+      if (!payload?.success) throw new Error("Upload failed");
 
       // Server returns a full secure_url from Cloudinary
       setImageUrl(null);
-
-      if (user) {
-        setUser({ ...user, profilePhoto: data.imageUrl || undefined });
-      }
+      setUser({ ...user, profilePhoto: payload.imageUrl || undefined });
 
       alert("Photo uploaded successfully!");
     } catch (err) {
       console.error(err);
       alert("Error uploading file");
-    } finally {
-      setLoading(false);
     }
   };
 

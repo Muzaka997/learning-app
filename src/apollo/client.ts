@@ -1,11 +1,16 @@
-import { ApolloClient, InMemoryCache, createHttpLink, from } from "@apollo/client";
+import { ApolloClient, InMemoryCache, from } from "@apollo/client";
 import { setContext } from "@apollo/client/link/context";
+import UploadHttpLink from "apollo-upload-client/UploadHttpLink.mjs";
 import config from "../config";
 
-// GraphQL lives at the API root (no /api/v1), alongside the REST endpoints.
-const httpLink = createHttpLink({
+// UploadHttpLink handles both regular operations and multipart file uploads
+// (when a File/Blob appears in the variables). Terminating link.
+const uploadLink = new UploadHttpLink({
   uri: `${config.apiURL}/graphql`,
   credentials: "include",
+  // Apollo Server's CSRF prevention requires a preflight header for
+  // multipart (file upload) requests. Harmless on normal requests.
+  headers: { "Apollo-Require-Preflight": "true" },
 });
 
 // Reuse the same JWT the REST layer stores in localStorage.
@@ -20,7 +25,7 @@ const authLink = setContext((_, { headers }) => {
 });
 
 export const apolloClient = new ApolloClient({
-  link: from([authLink, httpLink]),
+  link: from([authLink, uploadLink]),
   cache: new InMemoryCache(),
 });
 
